@@ -32,3 +32,9 @@ func main() {
 		log.Fatal("Erro ao iniciar o servidor: ", err)
 	}
 }
+
+/*
+ mkdir controllers
+ mkdir routes
+ mkdir services
+*/
