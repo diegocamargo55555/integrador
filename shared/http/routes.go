@@ -7,7 +7,7 @@ import (
 
 func LoadRoutes() {
 	http.HandleFunc("/main_page", ServeMainPage)
-	http.HandleFunc("/user", user_routes.UserController)
+	http.HandleFunc("/user", user_routes.UserRoute)
 
 }
 
