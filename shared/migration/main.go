@@ -1,4 +1,4 @@
-package main
+package migration
 
 import (
 	"time"
@@ -9,13 +9,14 @@ import (
 )
 
 type Usuario struct {
-	ID                   datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome                 string
-	Senha                string
+	ID   datatypes.UUID `gorm:"default:uuid_generate_v4()"`
+	Nome string         `gorm:"not null"`
+	//Name       string `gorm:"size:100;not null"`
+	Senha                string `gorm:"not null"`
 	Max_Val_Planejamento int32
 	Saldo                float64 `gorm:"default:0"`
 	Data_Nascimento      datatypes.Date
-	Email                string `gorm:"uniqueIndex"`
+	Email                string `gorm:"uniqueIndex";not null`
 	Entradas             []Entrada
 	Planejamentos        []Planejamento
 	Categorias           []Categoria
@@ -91,7 +92,7 @@ type Credito struct {
 	Data_Vencimento datatypes.Date
 }
 
-func main() {
+func executemigration() {
 	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
