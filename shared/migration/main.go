@@ -9,14 +9,13 @@ import (
 )
 
 type Usuario struct {
-	ID   datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome string         `gorm:"not null"`
-	//Name       string `gorm:"size:100;not null"`
-	Senha                string `gorm:"not null"`
+	ID                   datatypes.UUID `gorm:"default:uuid_generate_v4()"`
+	Nome                 string         `gorm:"not null"`
+	Senha                string         `gorm:"not null"`
 	Max_Val_Planejamento int32
 	Saldo                float64 `gorm:"default:0"`
 	Data_Nascimento      datatypes.Date
-	Email                string `gorm:"uniqueIndex";not null`
+	Email                string `gorm:"uniqueIndex,not null"`
 	Entradas             []Entrada
 	Planejamentos        []Planejamento
 	Categorias           []Categoria
