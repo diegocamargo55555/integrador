@@ -8,16 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
-func CreateUserService(nome string, email string, senha string) migration.Usuario {
+func CreateUserService(nome string, email string, senha string) {
 	emailExist := false
 	if emailExist {
 		println("email ja existe")
-
-	}
-	user := migration.Usuario{
-		Nome:  nome,
-		Email: email,
-		Senha: senha,
 	}
 	print("\n1\n")
 	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
@@ -31,5 +25,4 @@ func CreateUserService(nome string, email string, senha string) migration.Usuari
 	print("\n2\n")
 
 	println("funcionou")
-	return user
 }
