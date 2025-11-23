@@ -14,34 +14,21 @@ func (h *CategoriaController) UpdateCategoria(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Categoria não encontrada!"})
 		return
 	}
-	var novaCategoria Entidades.Categoria
-	// var categoria Entidades.Categoria
-
-	if err := c.ShouldBindJSON(&categoria); err != nil {
+	var novaCategoria Entidades.Categoria = *categoria
+	if err := c.ShouldBindJSON(&novaCategoria); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	if novaCategoria.Nome == "" {
-		novaCategoria.Nome = categoria.Nome
+	resultado, err := h.categoriaService.GetCategoriaByName(novaCategoria.Nome)
+	if resultado.Nome == novaCategoria.Nome || err == nil {
+		if resultado.Nome != categoria.Nome {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Já existe uma categoria com esse nome!"})
+			return
+		}
 	}
-	if novaCategoria.Cor == "" {
-		novaCategoria.Cor = categoria.Cor
-	}
-	if novaCategoria.Limite == 0 {
-		novaCategoria.Limite = categoria.Limite
-	}
-	if novaCategoria.Valor_Esperado == 0 {
-		novaCategoria.Valor_Esperado = categoria.Valor_Esperado
-	}
-	novaCategoria.CreatedAt = categoria.CreatedAt
-	novaCategoria.UpdatedAt = categoria.UpdatedAt
-	novaCategoria.UsuarioId = categoria.UsuarioId
-	novaCategoria.ID = id
-	// categoria.ID = id
 	if err := h.categoriaService.UpdateCategoria(&novaCategoria); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, categoria)
+	c.JSON(http.StatusOK, novaCategoria)
 }

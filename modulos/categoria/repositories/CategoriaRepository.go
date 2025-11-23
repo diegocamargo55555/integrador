@@ -20,8 +20,12 @@ func (r *CategoriaRepository) GetAll() ([]Entidades.Categoria, error) {
 	return categorias, resultado.Error
 }
 
+func (r *CategoriaRepository) GetByName(name string) (*Entidades.Categoria, error) {
+	var categoria Entidades.Categoria
+	result := r.Db.Where("nome = ?", name).First(&categoria)
+	return &categoria, result.Error
+}
 func (r *CategoriaRepository) GetByID(uuid string) (*Entidades.Categoria, error) {
-	print("ID" + uuid)
 	var categoria Entidades.Categoria
 	result := r.Db.Where("id = ?", uuid).First(&categoria)
 	return &categoria, result.Error

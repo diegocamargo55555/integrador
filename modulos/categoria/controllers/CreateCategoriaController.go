@@ -16,6 +16,12 @@ func (h *CategoriaController) CreateCategoria(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	resultado, err := h.categoriaService.GetCategoriaByName(categoria.Nome)
+
+	if resultado.Nome == categoria.Nome || err == nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Já existe uma categoria com esse nome!"})
+		return
+	}
 	categoria.CreatedAt = time.Now()
 	categoria.UpdatedAt = time.Now()
 	if err := h.categoriaService.CreateCategoriaService(&categoria); err != nil {
