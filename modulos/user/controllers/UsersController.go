@@ -8,7 +8,6 @@ import (
 	database "integrador/shared"
 )
 
-// Estrutura para receber os dados do JSON no Create
 type CreateUserRequest struct {
 	Nome  string `json:"nome"`
 	Email string `json:"email"`
