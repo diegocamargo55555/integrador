@@ -7,4 +7,3 @@ import (
 type UserRepository struct {
 	Db *gorm.DB
 }
-
