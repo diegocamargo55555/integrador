@@ -16,7 +16,7 @@ type Usuario struct {
 	Max_Val_Planejamento int32
 	Saldo                float64 `gorm:"default:0"`
 	Data_Nascimento      datatypes.Date
-	Email                string `gorm:"uniqueIndex";not null`
+	Email                string `gorm:"uniqueIndex"`
 	Entradas             []Entrada
 	Planejamentos        []Planejamento
 	Categorias           []Categoria

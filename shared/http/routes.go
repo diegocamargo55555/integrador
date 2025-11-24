@@ -8,7 +8,6 @@ import (
 func LoadRoutes() {
 	http.HandleFunc("/main_page", ServeMainPage)
 	http.HandleFunc("/user", user_routes.UserRoute)
-
 }
 
 func ServeMainPage(w http.ResponseWriter, r *http.Request) {

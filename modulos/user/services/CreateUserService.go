@@ -1,28 +1,33 @@
 package user_services
 
 import (
-	"context"
-	migration "integrador/shared/migration"
+	"errors"
+	"integrador/shared/migration"
 
-	"gorm.io/driver/postgres"
+	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
-
-func CreateUserService(nome string, email string, senha string) {
-	emailExist := false
-	if emailExist {
-		println("email ja existe")
+func CreateUserService(db *gorm.DB, nome string, email string, senha string) (*migration.Usuario, error) {
+	var usuarioExistente migration.Usuario
+	result := db.Where("email = ?", email).First(&usuarioExistente)
+	if result.Error == nil {
+		return nil, errors.New("email já está em uso")
 	}
-	print("\n1\n")
-	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(senha), bcrypt.DefaultCost)
 	if err != nil {
-		panic(err)
+		return nil, errors.New("erro ao encriptar a senha")
 	}
-	ctx := context.Background()
 
-	err = gorm.G[migration.Usuario](db).Create(ctx, &migration.Usuario{Nome: nome, Senha: senha, Email: email})
-	print("\n2\n")
+	novoUsuario := migration.Usuario{
+		Nome:  nome,
+		Email: email,
+		Senha: string(hashedPassword),
+	}
 
-	println("funcionou")
+	if err := db.Create(&novoUsuario).Error; err != nil {
+		return nil, err
+	}
+
+	return &novoUsuario, nil
 }
