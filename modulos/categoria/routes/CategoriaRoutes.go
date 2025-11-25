@@ -14,7 +14,7 @@ func BookRouter(group *gin.RouterGroup, db *gorm.DB) {
 	categoriaService := services.NewCategoriaService(categoriaRepository)
 	categoriaController := controllers.NewCategoriaController(categoriaService)
 
-	group.GET("/categoria", categoriaController.ListBooks)
+	group.GET("/categoria", categoriaController.ListCategorias)
 	group.GET("/categoria/:ID", categoriaController.GetCategoria)
 	group.POST("/categoria", categoriaController.CreateCategoria)
 	group.PUT("/categoria/:ID", categoriaController.UpdateCategoria)
