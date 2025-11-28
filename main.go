@@ -1,25 +1,26 @@
 package main
 
 import (
-	"fmt"
-	database "integrador/shared"
-	routes "integrador/shared/http"
-	"log"
-	"net/http"
-)
-
-func main() {
-	database.Init()
-	routes.LoadRoutes()
-
-	fmt.Println("Servidor rodando em http://localhost:8080")
-	err := http.ListenAndServe(":8080", nil)
-	router "integrador/modulos/categoria/routes"
+	routerCategoria "integrador/modulos/categoria/routes"
+	routerGasto "integrador/modulos/gasto/routes"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
+
+// func main() {
+// 	database.Init()
+// 	routes.LoadRoutes()
+
+// 	fmt.Println("Servidor rodando em http://localhost:8080")
+// 	err := http.ListenAndServe(":8080", nil)
+// 	router "integrador/modulos/categoria/routes"
+
+// 	"github.com/gin-gonic/gin"
+// 	"gorm.io/driver/postgres"
+// 	"gorm.io/gorm"
+// )
 
 func main() {
 	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
@@ -30,7 +31,8 @@ func main() {
 	// esse funciona no Insomnia! Estou testando os services nele
 	r := gin.Default()
 	caminho := r.Group("/aginisia")
-	router.BookRouter(caminho, db)
+	routerCategoria.CategoriaRouter(caminho, db)
+	routerGasto.GastoRouter(caminho, db)
 	r.Run(":8080")
 	// routes.LoadRoutes()
 

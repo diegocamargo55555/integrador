@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func BookRouter(group *gin.RouterGroup, db *gorm.DB) {
+func CategoriaRouter(group *gin.RouterGroup, db *gorm.DB) {
 	categoriaRepository := repositories.NewCategoryRepository(db)
 	categoriaService := services.NewCategoriaService(categoriaRepository)
 	categoriaController := controllers.NewCategoriaController(categoriaService)
