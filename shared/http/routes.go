@@ -1,16 +1,15 @@
 package routes
 
 import (
-	user_routes "integrador/modulos/user/routes"
-	"net/http"
-	gastos_routes "integrador/modulos/categoria/routes"
+	cat "integrador/modulos/categoria/routes"
+	gasto "integrador/modulos/gasto/routes"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func LoadRoutes() {
-	http.HandleFunc("/aginisia/categoria", gastos_routes.BookRouter())
+func LoadRoutes(group *gin.RouterGroup, db *gorm.DB) {
+	cat.CategoriaRouter(group, db)
+	gasto.GastoRouter(group, db)
 
-}
-
-func ServeMainPage(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "view/main_page/main_page.html")
 }

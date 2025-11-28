@@ -1,8 +1,7 @@
 package main
 
 import (
-	routerCategoria "integrador/modulos/categoria/routes"
-	routerGasto "integrador/modulos/gasto/routes"
+	routes "integrador/shared/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
@@ -32,10 +31,8 @@ func main() {
 	r := gin.Default()
 
 	caminho := r.Group("/aginisia")
-	routerCategoria.CategoriaRouter(caminho, db)
-	routerGasto.GastoRouter(caminho, db)
+	routes.LoadRoutes(caminho, db)
 	r.Run(":8080")
-	// routes.LoadRoutes()
 
 	// fmt.Println("Servidor rodando em http://localhost:8080")
 	// // O segundo argumento (nil) informa para usar o roteador padrão
