@@ -1,33 +1,26 @@
 package user_services
 
 import (
-	"errors"
-	"integrador/shared/migration"
-
-	"golang.org/x/crypto/bcrypt"
-	"gorm.io/gorm"
+	Entidades "integrador/modulos/user/entities"
+	"time" 
 )
-func CreateUserService(db *gorm.DB, nome string, email string, senha string) (*migration.Usuario, error) {
-	var usuarioExistente migration.Usuario
-	result := db.Where("email = ?", email).First(&usuarioExistente)
-	if result.Error == nil {
-		return nil, errors.New("email já está em uso")
+
+func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
+	resultado, err := s.repo.GetByID(user.Email)
+	if resultado.Email == user.Email || err == nil {
+		err := erroEmail()
+		return err
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(senha), bcrypt.DefaultCost)
-	if err != nil {
-		return nil, errors.New("erro ao encriptar a senha")
+	if len(user.Senha) <= 8 {
+		err := erroSenha()
+		return err
 	}
 
-	novoUsuario := migration.Usuario{
-		Nome:  nome,
-		Email: email,
-		Senha: string(hashedPassword),
+	dataNascimento := time.Time(user.Data_Nascimento)
+	if dataNascimento.AddDate(18, 0, 0).After(time.Now()) {
+		return erroMenorDeIdade()
 	}
+	return s.repo.Create(user)
 
-	if err := db.Create(&novoUsuario).Error; err != nil {
-		return nil, err
-	}
-
-	return &novoUsuario, nil
 }

@@ -1,47 +1,40 @@
 package user_controllers
 
 import (
-	"encoding/json"
-	"net/http"
-
+	user_entities "integrador/modulos/user/entities"
 	user_services "integrador/modulos/user/services"
-	database "integrador/shared"
+	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
-type CreateUserRequest struct {
-	Nome  string `json:"nome"`
-	Email string `json:"email"`
-	Senha string `json:"senha"`
+type UserController struct {
+	userService user_services.UserService
 }
 
-func CreateUserController(w http.ResponseWriter, r *http.Request) {
-	var req CreateUserRequest
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "JSON inválido", http.StatusBadRequest)
+func (h *UserController) CreateUser(c *gin.Context) {
+	var user user_entities.Usuario
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-
-	db := database.GetDB()
-	usuario, err := user_services.CreateUserService(db, req.Nome, req.Email, req.Senha)
-
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	user.CreatedAt = time.Now()
+	user.UpdatedAt = time.Now()
+	if err := h.userService.CreateUserService(&user); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(usuario)
+	c.JSON(http.StatusCreated, user)
 }
 
-func ListUsersController(w http.ResponseWriter, r *http.Request) {
-	db := database.GetDB()
+func (h *UserController) ListUsers(c *gin.Context) {
+	users, err := h.userService.ListUserService()
 
-	usuarios, err := user_services.ListUserService(db)
 	if err != nil {
-		http.Error(w, "Erro ao buscar usuários", http.StatusInternalServerError)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-
-	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(usuarios)
+	c.JSON(http.StatusOK, users)
 }

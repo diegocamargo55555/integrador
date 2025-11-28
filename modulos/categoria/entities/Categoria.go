@@ -12,3 +12,5 @@ type Categoria struct {
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 }
+
+

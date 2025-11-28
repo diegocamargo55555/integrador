@@ -1,19 +1,11 @@
 package user_services
 
 import (
-	"integrador/shared/migration"
-
-	"gorm.io/gorm"
+	Entidades "integrador/modulos/user/entities"
 )
 
-func ListUserService(db *gorm.DB) ([]migration.Usuario, error) {
-	var usuarios []migration.Usuario
-
-	result := db.Find(&usuarios)
-
-	if result.Error != nil {
-		return nil, result.Error
-	}
-
-	return usuarios, nil
+func (r *UserService) ListUserService() ([]Entidades.Usuario, error) {
+	var users []Entidades.Usuario
+	resultado := r.repo.Db.Find(&users)
+	return users, resultado.Error
 }

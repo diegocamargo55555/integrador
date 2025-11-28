@@ -1,19 +1,6 @@
 package main
 
 import (
-	"fmt"
-	database "integrador/shared"
-	routes "integrador/shared/http"
-	"log"
-	"net/http"
-)
-
-func main() {
-	database.Init()
-	routes.LoadRoutes()
-
-	fmt.Println("Servidor rodando em http://localhost:8080")
-	err := http.ListenAndServe(":8080", nil)
 	router "integrador/modulos/categoria/routes"
 
 	"github.com/gin-gonic/gin"
@@ -29,6 +16,7 @@ func main() {
 	}
 	// esse funciona no Insomnia! Estou testando os services nele
 	r := gin.Default()
+
 	caminho := r.Group("/aginisia")
 	router.BookRouter(caminho, db)
 	r.Run(":8080")

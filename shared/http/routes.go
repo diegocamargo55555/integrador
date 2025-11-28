@@ -3,11 +3,12 @@ package routes
 import (
 	user_routes "integrador/modulos/user/routes"
 	"net/http"
+	gastos_routes "integrador/modulos/categoria/routes"
 )
 
 func LoadRoutes() {
-	http.HandleFunc("/main_page", ServeMainPage)
-	http.HandleFunc("/user", user_routes.UserRoute)
+	http.HandleFunc("/aginisia/categoria", gastos_routes.BookRouter())
+
 }
 
 func ServeMainPage(w http.ResponseWriter, r *http.Request) {
