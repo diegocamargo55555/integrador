@@ -13,6 +13,10 @@ type UserController struct {
 	userService user_services.UserService
 }
 
+func NewUserController(userService *user_services.UserService) *UserController {
+	return &UserController{userService: *userService}
+}
+
 func (h *UserController) CreateUser(c *gin.Context) {
 	var user user_entities.Usuario
 
