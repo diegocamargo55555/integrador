@@ -10,10 +10,14 @@ import (
 )
 
 func UserRoute(group *gin.RouterGroup, db *gorm.DB) {
-	userRepository := repositories.NewCategoryRepository(db)
+	userRepository := repositories.NewUserRepository(db)
 	userService := user_services.NewUserService(userRepository)
 	userController := user_controllers.NewUserController(userService)
 
 	group.GET("/user", userController.ListUsers)
+	group.GET("/user/:ID", userController.GetUser)
 	group.POST("/user", userController.CreateUser)
+	group.PUT("/user/:ID", userController.UpdateUser)
+	group.DELETE("/user/:ID", userController.DeleteUserService)
+
 }
