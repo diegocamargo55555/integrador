@@ -1,6 +1,7 @@
 package router
 
 import (
+	repositoriesGasto "integrador/modulos/gasto/repositories"
 	controllers "integrador/modulos/variado/controllers"
 	repositories "integrador/modulos/variado/repositories"
 	services "integrador/modulos/variado/services"
@@ -11,7 +12,8 @@ import (
 
 func GastoVariadoRouter(group *gin.RouterGroup, db *gorm.DB) {
 	gastoVariadoRepository := repositories.NewGastoVariadoRepository(db)
-	gastoVariadoService := services.NewGastoVariadoService(gastoVariadoRepository)
+	gastoRepository := repositoriesGasto.NewGastoRepository(db)
+	gastoVariadoService := services.NewGastoVariadoService(gastoVariadoRepository, gastoRepository)
 	gastoVariadoController := controllers.NewGastoVariadoController(gastoVariadoService)
 
 	group.GET("/gasto/variado", gastoVariadoController.ListGastosVariado)

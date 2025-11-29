@@ -2,16 +2,18 @@ package router
 
 import (
 	controllers "integrador/modulos/fixo/controllers"
-	repositories "integrador/modulos/fixo/repositories"
+	repositoriesFixo "integrador/modulos/fixo/repositories"
 	services "integrador/modulos/fixo/services"
+	repositoriesGasto "integrador/modulos/gasto/repositories"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 func GastoFixoRouter(group *gin.RouterGroup, db *gorm.DB) {
-	gastoFixoRepository := repositories.NewGastoFixoRepository(db)
-	gastoFixoService := services.NewGastoFixoService(gastoFixoRepository)
+	gastoFixoRepository := repositoriesFixo.NewGastoFixoRepository(db)
+	gastoRepository := repositoriesGasto.NewGastoRepository(db)
+	gastoFixoService := services.NewGastoFixoService(gastoFixoRepository, gastoRepository)
 	gastoFixoController := controllers.NewGastoFixoController(gastoFixoService)
 
 	group.GET("/gasto/fixo", gastoFixoController.ListGastosFixo)

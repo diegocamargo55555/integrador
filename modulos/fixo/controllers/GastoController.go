@@ -23,7 +23,6 @@ func (h *GastoFixoController) CreateGastoFixo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// fixo. = time.Now()
 	if err := h.gastoFixoService.CreateFixoService(&fixo); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
