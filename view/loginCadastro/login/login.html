@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Login Neon Minimalista</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <div class="conteiner-login">
+        <div class="cartao-login">
+            <div class="cabecalho-login">
+                <div class="icone-logo">Logo</div>
+                <h2>Entrar</h2>
+                <p>Acesse sua conta</p>
+            </div>
+
+            <form class="formulario-login" id="formularioLogin" novalidate>
+                <div class="grupo-formulario">
+                    <div class="envoltorio-input">
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <label for="email">E-mail</label>
+                        <span class="linha-input"></span>
+                    </div>
+                    <span class="mensagem-erro" id="erroEmail"></span>
+                </div>
+
+                <div class="grupo-formulario">
+                    <div class="envoltorio-input envoltorio-senha">
+                        <input type="password" id="senha" name="senha" required autocomplete="current-password">
+                        <label for="senha">Senha</label>
+                        <button type="button" class="alternar-senha" id="botaoAlternarSenha"
+                            aria-label="Alternar visibilidade da senha">
+                            <span class="icone-alternar"></span>
+                        </button>
+                        <span class="linha-input"></span>
+                    </div>
+                    <span class="mensagem-erro" id="erroSenha"></span>
+                </div>
+
+                <div class="opcoes-formulario">
+                    <div class="envoltorio-lembrar">
+                        <input type="checkbox" id="lembrar" name="lembrar">
+                        <label for="lembrar" class="rotulo-checkbox">
+                            <span class="checkbox-customizado"></span>
+                            Manter conectado
+                        </label>
+                    </div>
+                    <a href="#" class="esqueceu-senha">Esqueceu a senha?</a>
+                </div>
+
+                <button type="submit" class="botao-login btn">
+                    <span class="texto-btn">Entrar</span>
+                    <span class="carregador-btn"></span>
+                    <span class="brilho-btn"></span>
+                </button>
+            </form>
+
+            <div class="divisor">
+                <span>ou</span>
+            </div>
+
+
+            <div class="link-cadastro">
+                <p>Novo por aqui? <a href="../cadastro/cadastro.html">Criar uma conta</a></p>
+            </div>
+
+            <div class="mensagem-sucesso" id="mensagemSucesso">
+                <div class="icone-sucesso">✓</div>
+                <h3>Bem-vindo de volta!</h3>
+                <p>Redirecionando para o painel...</p>
+            </div>
+        </div>
+
+        <div class="efeitos-fundo">
+            <div class="esfera-brilho esfera-brilho-1"></div>
+            <div class="esfera-brilho esfera-brilho-2"></div>
+            <div class="esfera-brilho esfera-brilho-3"></div>
+        </div>
+    </div>
+
+    <script src="../../shared/js/form-utils.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

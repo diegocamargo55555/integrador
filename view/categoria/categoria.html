@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Categorias</title>
+    
+    <link rel="stylesheet" href="../gastos/style.css"> 
+    <link rel="stylesheet" href="../categoria/categoria.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="container-app">
+        <nav class="barra-lateral">
+            <div class="area-logo">
+                <span class="icone-nav logo">F</span>
+            </div>
+            <ul class="nav-lateral">
+                <li class="item-nav">
+                    <a href="../gastos/gastos.html" class="link-nav" title="Home"><span class="icone-nav">H</span></a> 
+                </li>
+                <li class="item-nav">
+                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas"><span class="icone-nav">$</span></a>
+                </li>
+                <li class="item-nav ativo">
+                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias"><span class="icone-nav">C</span></a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="wrapper-principal">
+            
+            <header class="cabecalho-pagina">
+                <div class="navegador-mes">
+                    <button class="seta-nav">&lt;</button>
+                    <span class="mes-atual">Janeiro 2025</span>
+                    <button class="seta-nav">&gt;</button>
+                </div>
+                <div class="info-usuario">
+                    <span class="dia-atual">Dia 23</span>
+                    <div class="avatar-usuario">U</div>
+                </div>
+            </header>
+
+            <main class="area-conteudo-dividida">
+            
+                <section class="painel-categorias">
+                    <div class="cabecalho-painel">
+                        <h2 class="titulo-painel">Gerenciar Categorias</h2>
+                        <button class="btn-nova-categoria" onclick="document.getElementById('modal-nova-categoria').style.display='flex'">
+                            + Nova Categoria
+                        </button>
+                    </div>
+                    
+                    <div class="container-tabela">
+                        <table class="tabela-categorias">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>% Ocupada</th>
+                                    <th>% Livre</th>
+                                    <th>Total (R$)</th>
+                                    <th class="col-acoes">Ações</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody class="grupo-categoria" data-nome="Lazer" data-limite="1000">
+                                <tr class="linha-principal">
+                                    <td>
+                                        <span class="ponto-cor" style="background-color: #1abc9c;"></span>
+                                        <strong>Lazer</strong>
+                                    </td>
+                                    <td>
+                                        <div class="barra-progresso">
+                                            <div class="progresso-preenchido" style="width: 79%; background-color: #e74c3c;"></div>
+                                            <span class="texto-progresso">79%</span>
+                                        </div>
+                                    </td>
+                                    <td>21%</td>
+                                    <td>1.000,00</td>
+                                    <td class="col-acoes">
+                                        <div class="grupo-botoes-acao">
+                                            <button class="btn-pequeno btn-editar">✎</button>
+                                            <button class="btn-pequeno btn-excluir">×</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="linha-detalhe">
+                                    <td class="celula-indentada" colspan="5">
+                                        <span class="detalhe-label">Disponível:</span> 
+                                        <span class="detalhe-valor">R$ 210,00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                            <tbody class="grupo-categoria" data-nome="Fixos" data-limite="8000">
+                                <tr class="linha-principal">
+                                    <td>
+                                        <span class="ponto-cor" style="background-color: #3498db;"></span>
+                                        <strong>Fixos</strong>
+                                    </td>
+                                    <td>
+                                        <div class="barra-progresso">
+                                            <div class="progresso-preenchido" style="width: 80%; background-color: #f1c40f;"></div>
+                                            <span class="texto-progresso">80%</span>
+                                        </div>
+                                    </td>
+                                    <td>20%</td>
+                                    <td>8.000,00</td>
+                                    <td class="col-acoes">
+                                        <div class="grupo-botoes-acao">
+                                            <button class="btn-pequeno btn-editar">✎</button>
+                                            <button class="btn-pequeno btn-excluir">×</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="linha-detalhe">
+                                    <td class="celula-indentada" colspan="5">
+                                        <span class="detalhe-label">Disponível:</span>
+                                        <span class="detalhe-valor">R$ 1.600,00</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <aside class="painel-resumo-lateral">
+                    
+                    <div class="card-resumo">
+                        <h3 class="titulo-resumo">Resumo Mensal</h3>
+                        
+                        <table class="tabela-resumo">
+                            <thead>
+                                <tr>
+                                    <th>Cat.</th>
+                                    <th>Gasto</th>
+                                    <th>Limite</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><span class="ponto-cor" style="background-color: #3498db;"></span>Fixos</td>
+                                    <td>8k</td>
+                                    <td>10k</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="ponto-cor" style="background-color: #f1c40f;"></span>Saúde</td>
+                                    <td>2k</td>
+                                    <td>5k</td>
+                                </tr>
+                                <tr>
+                                    <td><span class="ponto-cor" style="background-color: #1abc9c;"></span>Lazer</td>
+                                    <td>0.8k</td>
+                                    <td>1k</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="container-grafico">
+                            <canvas id="categoriasPieChart"></canvas>
+                        </div>
+                    </div>
+
+                </aside>
+            
+            </main>
+        </div>
+    </div>
+
+    <div class="modal-fundo" id="modal-nova-categoria">
+        <div class="modal-conteudo">
+            <div class="cabecalho-modal">
+                <h2 class="titulo-modal" id="modal-categoria-titulo">Nova Categoria</h2>
+                <button class="fechar-modal" onclick="document.getElementById('modal-nova-categoria').style.display='none'">×</button>
+            </div>
+            
+            <form class="formulario-transacao" id="form-nova-categoria">
+                <div class="grupo-form">
+                    <label for="categoria-nome" class="rotulo-form">Nome da Categoria</label>
+                    <input type="text" id="categoria-nome" class="input-form" placeholder="Ex: Supermercado" required>
+                </div>
+                
+                <div class="grupo-form-linha">
+                    <div class="grupo-form">
+                        <label for="categoria-limite" class="rotulo-form">Limite Mensal (R$)</label>
+                        <input type="number" id="categoria-limite" class="input-form" step="0.01" placeholder="1000.00" required>
+                    </div>
+                    <div class="grupo-form">
+                        <label for="categoria-cor" class="rotulo-form">Cor</label>
+                        <input type="color" id="categoria-cor" class="input-form" style="height: 48px; padding: 5px;">
+                    </div>
+                </div>
+
+                <div class="acoes-form">
+                    <button type="button" class="botao-form-cancelar" onclick="document.getElementById('modal-nova-categoria').style.display='none'">Cancelar</button>
+                    <button type="submit" class="botao-form-enviar">Salvar Categoria</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
