@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Caixas</title>
+    
+    <link rel="stylesheet" href="../gastos/style.css"> 
+    <link rel="stylesheet" href="../planejamento/caixa.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <div class="container-app">
+        <nav class="barra-lateral">
+            <div class="area-logo">
+                <span class="icone-nav logo">F</span>
+            </div>
+            <ul class="nav-lateral">
+                <li class="item-nav">
+                    <a href="../gastos/gastos.html" class="link-nav" title="Home"><span class="icone-nav">H</span></a> 
+                </li>
+                <li class="item-nav ativo">
+                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas"><span class="icone-nav">$</span></a>
+                </li>
+                <li class="item-nav">
+                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias"><span class="icone-nav">C</span></a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="wrapper-principal">
+            
+            <header class="cabecalho-pagina">
+                <div class="navegador-mes">
+                    <button class="seta-nav">&lt;</button>
+                    <span class="mes-atual">Janeiro 2025</span>
+                    <button class="seta-nav">&gt;</button>
+                </div>
+                <div class="info-usuario">
+                    <span class="dia-atual">Dia 23</span>
+                    <div class="avatar-usuario">U</div>
+                </div>
+            </header>
+
+            <main class="area-conteudo-dividida">
+                
+                <section class="painel-lista">
+                    <h2 class="titulo-painel-lista">Suas Metas</h2>
+                    <div class="conteudo-lista">
+                        
+                        <div class="item-caixa ativo" 
+                             data-title="Celular Novo"
+                             data-color="#f39c12"
+                             data-valor-total="11000.00"
+                             data-valor-atual="6000.00"  
+                             data-tempo="6"
+                             data-valor-mensal="100.00"
+                             data-percent="71"
+                             data-grafico-labels='["Jan", "Fev", "Mar", "Abr"]'
+                             data-crescimento-dados='[3000, 4100, 5200, 6000]'
+                             data-depositos-dados='[1000, 1100, 1000, 800]'>
+                            
+                            <button class="btn-config-caixa" aria-label="Configurar caixa">⚙️</button>
+                            
+                            <h3 class="titulo-caixa">Celular Novo</h3>
+                            
+                            <div class="barra-progresso-caixa">
+                                <div class="preenchimento-progresso" style="width: 71%; background-color: #f39c12;"></div>
+                            </div>
+                            
+                            <div class="valores-caixa">
+                                <span class="valor-atual">R$ 6k</span>
+                                <span class="valor-meta">de R$ 11k</span>
+                            </div>
+                            
+                            <div class="estimativa-caixa">
+                                <span>Faltam: <strong>Calculando...</strong></span>
+                            </div>
+                        </div>
+
+                        <div class="item-caixa"
+                             data-title="Reserva Emergência"
+                             data-color="#2ecc71"
+                             data-valor-total="10000.00"
+                             data-valor-atual="1300.00"  
+                             data-tempo="24"
+                             data-valor-mensal="50.00"
+                             data-percent="30"
+                             data-grafico-labels='["Jan", "Fev", "Mar", "Abr"]'
+                             data-crescimento-dados='[500, 800, 1000, 1300]'
+                             data-depositos-dados='[300, 300, 300, 300]'>
+                            
+                            <button class="btn-config-caixa" aria-label="Configurar caixa">⚙️</button>
+                            
+                            <h3 class="titulo-caixa">Reserva Emergência</h3>
+                            
+                            <div class="barra-progresso-caixa">
+                                <div class="preenchimento-progresso" style="width: 30%; background-color: #2ecc71;"></div>
+                            </div>
+                            
+                            <div class="valores-caixa">
+                                <span class="valor-atual">R$ 1.3k</span>
+                                <span class="valor-meta">de R$ 10k</span>
+                            </div>
+                            
+                            <div class="estimativa-caixa">
+                                <span>Faltam: <strong>Calculando...</strong></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <section class="painel-detalhe">
+                    <header class="cabecalho-detalhe">
+                        <div class="icone-detalhe" style="background-color: #f39c12;"></div>
+                        <h2 class="titulo-detalhe">Celular Novo</h2>
+                    </header>
+
+                    <div class="resumo-detalhe">
+                        <div class="info-resumo">
+                            <div class="item-info">
+                                <span class="rotulo-info">Meta Total</span>
+                                <span class="valor-info" id="detalhe-valor-total">R$ 11.000,00</span>
+                            </div>
+                            <div class="item-info">
+                                <span class="rotulo-info">Tempo Estimado</span>
+                                <span class="valor-info destaque" id="detalhe-tempo">6 meses</span>
+                            </div>
+                             <div class="item-info">
+                                <span class="rotulo-info">Depósito Mensal</span>
+                                <span class="valor-info" id="detalhe-valor-mensal">R$ 100,00</span>
+                            </div>
+                        </div>
+                        <div class="grafico-donut-container">
+                            <canvas id="graficoDonut"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="area-graficos">
+                        <div class="container-grafico-card">
+                            <h4 class="titulo-grafico">Crescimento Total</h4>
+                            <div class="canvas-wrapper">
+                                <canvas id="graficoCrescimento"></canvas>
+                            </div>
+                        </div>
+                        <div class="container-grafico-card">
+                            <h4 class="titulo-grafico">Histórico de Depósitos</h4>
+                             <div class="canvas-wrapper">
+                                <canvas id="graficoDepositos"></canvas>
+                             </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal-fundo" id="modal-config-caixa">
+        <div class="modal-conteudo">
+            <div class="cabecalho-modal">
+                <h2 class="titulo-modal">Configurar Meta</h2>
+                <button class="fechar-modal" onclick="document.getElementById('modal-config-caixa').style.display='none'">×</button>
+            </div>
+            
+            <form class="formulario-transacao" id="config-caixa-form">
+                
+                <div class="grupo-form">
+                    <label for="config-valor-desejado" class="rotulo-form">Valor da Meta (R$)</label>
+                    <input type="number" id="config-valor-desejado" class="input-form" step="0.01" placeholder="10000.00">
+                </div>
+
+                <div class="grupo-form">
+                    <label for="config-deposito-mensal" class="rotulo-form">Depósito Mensal Estimado (R$)</label>
+                    <input type="number" id="config-deposito-mensal" class="input-form" step="0.01" placeholder="100.00">
+                </div>
+
+                <div class="grupo-form">
+                    <label for="config-cor" class="rotulo-form">Cor da Caixa</label>
+                    <input type="color" id="config-cor" class="input-form" style="height: 50px; padding: 5px;">
+                </div>
+                
+                <div class="acoes-form">
+                    <button type="button" class="botao-form-cancelar" id="config-cancel-btn">Cancelar</button>
+                    <button type="submit" class="botao-form-enviar">Salvar Alterações</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

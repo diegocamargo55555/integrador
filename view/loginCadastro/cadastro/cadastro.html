@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar Conta - Finanças</title>
+    <link rel="stylesheet" href="../style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="conteiner-login">
+        <div class="cartao-login">
+            <div class="cabecalho-login">
+                <div class="icone-logo" style="font-size: 1.5rem;">
+                    <i class="fa-solid fa-user-plus"></i>
+                </div>
+                <h2>Criar Conta</h2>
+                <p>Comece a controlar suas finanças hoje</p>
+            </div>
+            
+            <form class="formulario-login" id="formularioCadastro" novalidate>
+                
+                <div class="grupo-formulario">
+                    <div class="envoltorio-input">
+                        <input type="text" id="nome" name="nome" required autocomplete="name">
+                        <label for="nome">Nome Completo</label>
+                    </div>
+                    <span class="mensagem-erro" id="erroNome"></span>
+                </div>
+
+                <div class="grupo-formulario">
+                    <div class="envoltorio-input">
+                        <input type="email" id="email" name="email" required autocomplete="email">
+                        <label for="email">E-mail</label>
+                    </div>
+                    <span class="mensagem-erro" id="erroEmail"></span>
+                </div>
+
+                <div class="grupo-formulario">
+                    <div class="envoltorio-input envoltorio-senha">
+                        <input type="password" id="senha" name="senha" required autocomplete="new-password">
+                        <label for="senha">Senha</label>
+                        <button type="button" class="alternar-senha" data-target="senha" aria-label="Mostrar senha">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="mensagem-erro" id="erroSenha"></span>
+                </div>
+
+                <div class="grupo-formulario">
+                    <div class="envoltorio-input envoltorio-senha">
+                        <input type="password" id="confirmaSenha" name="confirmaSenha" required autocomplete="new-password">
+                        <label for="confirmaSenha">Confirmar Senha</label>
+                        <button type="button" class="alternar-senha" data-target="confirmaSenha" aria-label="Mostrar senha">
+                            <i class="fa-regular fa-eye"></i>
+                        </button>
+                    </div>
+                    <span class="mensagem-erro" id="erroConfirmaSenha"></span>
+                </div>
+
+                <div class="opcoes-formulario">
+                    <div class="envoltorio-lembrar">
+                        <input type="checkbox" id="termos" name="termos" required>
+                        <label for="termos" class="rotulo-checkbox">
+                            <span class="checkbox-customizado"></span>
+                            <span>Li e aceito os <a href="#" class="link-termos">Termos de Uso</a></span>
+                        </label>
+                    </div>
+                </div>
+                <span class="mensagem-erro" id="erroTermos" style="margin-top: -15px; margin-bottom: 15px;"></span>
+
+                <button type="submit" class="botao-login btn">
+                    <span class="texto-btn">Cadastrar</span>
+                    <span class="carregador-btn"></span>
+                </button>
+            </form>
+
+            <div class="link-cadastro">
+                <p>Já tem uma conta? <a href="../login/login.html">Fazer Login</a></p>
+            </div>
+
+            <div class="mensagem-sucesso" id="mensagemSucesso">
+                <div class="icone-sucesso">✓</div>
+                <h3>Conta Criada!</h3>
+                <p>Bem-vindo ao time. Redirecionando...</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
