@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sua Home Financeira</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="container-app">
+        <nav class="barra-lateral">
+            <div class="area-logo">
+                <span class="icone-nav logo" href="view/assets/image.png">Logo</span>
+            </div>
+            <ul class="nav-lateral">
+                <li class="item-nav ativo">
+                    <a href="#" class="link-nav" title="Home"><span class="icone-nav">H</span></a> 
+                </li>
+                <li class="item-nav">
+                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas"><span class="icone-nav">$</span></a>
+                </li>
+                <li class="item-nav">
+                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias"><span class="icone-nav">C</span></a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="wrapper-principal">
+            
+            <header class="cabecalho-app">
+                <div class="boas-vindas-cabecalho">
+                    <h1>Visão Geral</h1>
+                    <p>Gerencie sua fortuna (ou a falta dela)</p>
+                </div>
+    
+                <div class="controles-cabecalho">
+                    <div class="filtros-cabecalho">
+                        <div class="filtro-intervalo-data">
+                            <div class="grupo-input-data">
+                                <label for="data-inicio" class="rotulo-data">De</label>
+                                <input type="date" id="data-inicio" class="input-data">
+                            </div>
+                            <div class="grupo-input-data">
+                                <label for="data-fim" class="rotulo-data">Até</label>
+                                <input type="date" id="data-fim" class="input-data">
+                            </div>
+                        </div>
+                        
+                        <div class="resumo-saldo">
+                            <span>Saldo do Período</span>
+                            <strong>R$ 25,00</strong> 
+                        </div>
+                    </div>
+                
+                    <div class="abas-acao">
+                        <button class="botao-acao botao-acao--grafico">Relatório</button>
+                        <button class="botao-acao botao-acao--receita" 
+                                onclick="document.getElementById('modal-nova-entrada').style.display='flex'">
+                            + Entrada
+                        </button>
+                        <button class="botao-acao botao-acao--despesa"
+                                onclick="document.getElementById('modal-nova-saida').style.display='flex'">
+                            - Saída
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="area-conteudo">
+                <div class="colunas-conteudo">
+
+                    <section class="coluna-dados">
+                        <div class="cabecalho-coluna">
+                            <h2 class="titulo-coluna">Entradas</h2>
+                            <div class="emblema-coluna receita">+</div>
+                        </div>
+                        <ul class="lista-dados">
+                            <li class="item-dados">
+                                <div class="info-item">
+                                    <span class="nome-item">Salário</span>
+                                    <span class="meta-item">12/09</span>
+                                </div>
+                                <span class="valor-item receita">+ R$ 12.000,00</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="coluna-dados">
+                        <div class="cabecalho-coluna">
+                            <h2 class="titulo-coluna">Gastos</h2>
+                            <div class="emblema-coluna despesa">-</div>
+                        </div>
+                        <ul class="lista-dados">
+                            <li class="item-dados">
+                                <div class="info-item">
+                                    <span class="nome-item">Cartão Nubank</span>
+                                    <span class="meta-item">15/09 • Crédito</span>
+                                </div>
+                                <span class="valor-item despesa">- R$ 112,99</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                    <section class="coluna-dados">
+                        <div class="cabecalho-coluna">
+                            <h2 class="titulo-coluna">Fixos</h2>
+                            <div class="emblema-coluna fixo">●</div>
+                        </div>
+                        <ul class="lista-dados">
+                            <li class="item-dados">
+                                <div class="info-item">
+                                    <span class="nome-item">Internet</span>
+                                    <span class="meta-item">10/09 • Débito</span>
+                                </div>
+                                <span class="valor-item despesa">- R$ 112,99</span>
+                            </li>
+                        </ul>
+                    </section>
+
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal-fundo" id="modal-nova-entrada">
+        <div class="modal-conteudo">
+            <div class="cabecalho-modal">
+                <h2 class="titulo-modal">Nova Entrada</h2>
+                <button class="fechar-modal" onclick="document.getElementById('modal-nova-entrada').style.display='none'">×</button>
+            </div>
+            
+            <form class="formulario-transacao" action="#" method="post">
+                <div class="grupo-form">
+                    <label for="entrada-nome" class="rotulo-form">Descrição</label>
+                    <input type="text" id="entrada-nome" class="input-form" required placeholder="Ex: Freela, Salário...">
+                </div>
+                <div class="grupo-form-linha">
+                    <div class="grupo-form">
+                        <label for="entrada-data" class="rotulo-form">Data</label>
+                        <input type="date" id="entrada-data" class="input-form" required>
+                    </div>
+                    <div class="grupo-form">
+                        <label for="entrada-valor" class="rotulo-form">Valor (R$)</label>
+                        <input type="number" id="entrada-valor" class="input-form" required step="0.01" placeholder="0,00">
+                    </div>
+                </div>
+                <div class="acoes-form">
+                    <button type="button" class="botao-form-cancelar" onclick="document.getElementById('modal-nova-entrada').style.display='none'">Cancelar</button>
+                    <button type="submit" class="botao-form-enviar">Salvar Entrada</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-fundo" id="modal-nova-saida">
+        <div class="modal-conteudo">
+            <div class="cabecalho-modal">
+                <h2 class="titulo-modal">Nova Saída</h2>
+                <button class="fechar-modal" onclick="document.getElementById('modal-nova-saida').style.display='none'">×</button>
+            </div>
+            
+            <form class="formulario-transacao" action="#" method="post">
+                <div class="grupo-form">
+                    <label for="saida-nome" class="rotulo-form">Descrição</label>
+                    <input type="text" id="saida-nome" class="input-form" required placeholder="Ex: Aluguel, Pizza...">
+                </div>
+                <div class="grupo-form">
+                    <label for="saida-categoria" class="rotulo-form">Categoria</label>
+                    <select id="saida-categoria" class="input-form">
+                        <option>Moradia</option>
+                        <option>Alimentação</option>
+                        <option>Transporte</option>
+                    </select>
+                </div>
+    
+                <div class="grupo-form-linha">
+                    <div class="grupo-form">
+                        <label for="saida-data" class="rotulo-form">Data</label>
+                        <input type="date" id="saida-data" class="input-form" required>
+                    </div>
+                    <div class="grupo-form">
+                        <label for="saida-valor" class="rotulo-form">Valor (R$)</label>
+                        <input type="number" id="saida-valor" class="input-form" required step="0.01" placeholder="0,00">
+                    </div>
+                </div>
+                
+                <div class="grupo-form-checkbox">
+                    <input type="checkbox" id="saida-fixo" class="checkbox-form">
+                    <label for="saida-fixo">Despesa Fixa Mensal</label>
+                </div>
+
+                <div class="acoes-form">
+                    <button type="button" class="botao-form-cancelar" onclick="document.getElementById('modal-nova-saida').style.display='none'">Cancelar</button>
+                    <button type="submit" class="botao-form-enviar despesa">Lançar Despesa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>
