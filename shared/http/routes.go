@@ -2,8 +2,10 @@ package routes
 
 import (
 	cat "integrador/modulos/categoria/routes"
+	credito "integrador/modulos/credito/routes"
 	gastoFixo "integrador/modulos/fixo/routes"
 	gasto "integrador/modulos/gasto/routes"
+	pagamento "integrador/modulos/pagamento/routes"
 	planejamento "integrador/modulos/planejamento/routes"
 	user "integrador/modulos/user/routes"
 	gastoVariado "integrador/modulos/variado/routes"
@@ -19,5 +21,7 @@ func LoadRoutes(group *gin.RouterGroup, db *gorm.DB) {
 	gastoVariado.GastoVariadoRouter(group, db)
 	user.UserRoute(group, db)
 	planejamento.PlanejamentoRouter(group, db)
+	pagamento.PagamentoRouter(group, db)
+	credito.CreditoRouter(group, db)
 
 }
