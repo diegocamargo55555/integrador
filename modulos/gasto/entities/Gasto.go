@@ -1,6 +1,8 @@
 package entities
 
-import "time"
+import (
+	"time"
+)
 
 type Gasto struct {
 	ID          string  `gorm:"default:uuid_generate_v4()"`
