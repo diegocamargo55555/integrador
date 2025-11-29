@@ -9,14 +9,13 @@ import (
 )
 
 type Usuario struct {
-	ID   datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome string         `gorm:"not null"`
-	//Name       string `gorm:"size:100;not null"`
-	Senha                string `gorm:"not null"`
-	Max_Val_Planejamento int32
-	Saldo                float64 `gorm:"default:0"`
-	Data_Nascimento      datatypes.Date
-	Email                string `gorm:"uniqueIndex";not null`
+	ID                   datatypes.UUID `gorm:"default:uuid_generate_v4()"`
+	Nome                 string         `gorm:"not null"`
+	Senha                string         `gorm:"not null"`
+	Max_Val_Planejamento int32          `gorm:"not null"`
+	Saldo                float64        `gorm:"default:0"`
+	Data_Nascimento      datatypes.Date `gorm:"not null"`
+	Email                string         `gorm:"uniqueIndex"`
 	Entradas             []Entrada
 	Planejamentos        []Planejamento
 	Categorias           []Categoria
@@ -27,69 +26,72 @@ type Usuario struct {
 
 type Entrada struct {
 	ID           datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome         string
-	Valor        float64 `gorm:"default:0"`
-	Data_Entrada datatypes.Date
-	UsuarioId    datatypes.UUID
+	Nome         string         `gorm:"not null"`
+	Valor        float64        `gorm:"default:0"`
+	Data_Entrada datatypes.Date `gorm:"not null"`
+	UsuarioId    datatypes.UUID `gorm:"not null"`
 	CreatedAt    time.Time
 	UpdatedAt    time.Time
 }
 type Planejamento struct {
 	ID                     datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome                   string
-	Valor_Atual            float64 `gorm:"default:0"`
-	Valor_Desejado         float64
-	Estima_Deposito_Mensal float32
-	Estima_Data_Termino    datatypes.Date
-	CategoriaId            datatypes.UUID
-	UsuarioId              datatypes.UUID
+	Nome                   string         `gorm:"not null"`
+	Valor_Atual            float64        `gorm:"default:0"`
+	Valor_Desejado         float64        `gorm:"not null"`
+	Estima_Deposito_Mensal float32        `gorm:"not null"`
+	Estima_Data_Termino    datatypes.Date `gorm:"not null"`
+	CategoriaId            datatypes.UUID `gorm:"not null"`
+	UsuarioId              datatypes.UUID `gorm:"not null"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 }
 
 type Categoria struct {
 	ID             datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome           string
-	Valor_Esperado float64
-	Cor            string `gorm:"default:#ffffff"`
-	Limite         float64
-	UsuarioId      datatypes.UUID
-	Planejamentos  []Planejamento
-	Gastos         []Gasto
+	Nome           string         `gorm:"uniqueIndex"`
+	Valor_Esperado float64        `gorm:"not null"`
+	Cor            string         `gorm:"default:#ffffff"`
+	Limite         float64        `gorm:"not null"`
+	UsuarioId      datatypes.UUID `gorm:"not null"`
+	Planejamentos  []Planejamento `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Gastos         []Gasto        `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
 }
 
 type Gasto struct {
-	ID          datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome        string
-	Mes         int
-	Foi_Pago    bool
-	Valor       float64 `gorm:"default:0"`
-	UsuarioId   datatypes.UUID
-	CategoriaId datatypes.UUID
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID            datatypes.UUID `gorm:"default:uuid_generate_v4()"`
+	Nome          string         `gorm:"not null"`
+	Mes           int            `gorm:"not null"`
+	Foi_Pago      bool           `gorm:"not null"`
+	Valor         float64        `gorm:"default:0"`
+	UsuarioId     datatypes.UUID `gorm:"not null"`
+	CategoriaId   datatypes.UUID `gorm:"not null"`
+	GastoFixos    []Fixo         `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	GastoVariados []Variados     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Credito       []Credito      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	CreatedAt     time.Time
+	UpdatedAt     time.Time
 }
 
 type Fixo struct {
-	GastoID         datatypes.UUID
-	Data_Vencimento datatypes.Date
+	GastoID         datatypes.UUID `gorm:"not null"`
+	Data_Vencimento datatypes.Date `gorm:"not null"`
 }
 type Variados struct {
-	GastoID    datatypes.UUID
-	Data_Gasto datatypes.Date
+	GastoID    datatypes.UUID `gorm:"not null"`
+	Data_Gasto datatypes.Date `gorm:"not null"`
 }
 
 type Pagamento struct {
-	GastoID   datatypes.UUID
-	Tipo      string
+	GastoID   datatypes.UUID `gorm:"not null"`
+	Tipo      string         `gorm:"not null"`
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
 type Credito struct {
-	GastoID         datatypes.UUID
-	Data_Vencimento datatypes.Date
+	GastoID         datatypes.UUID `gorm:"not null"`
+	Data_Vencimento datatypes.Date `gorm:"not null"`
 }
 
 func executemigration() {

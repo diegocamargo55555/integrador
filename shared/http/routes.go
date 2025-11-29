@@ -1,16 +1,21 @@
 package routes
 
 import (
-	user_routes "integrador/modulos/user/routes"
-	"net/http"
+	cat "integrador/modulos/categoria/routes"
+	gastoFixo "integrador/modulos/fixo/routes"
+	gasto "integrador/modulos/gasto/routes"
+	user "integrador/modulos/user/routes"
+	gastoVariado "integrador/modulos/variado/routes"
+
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func LoadRoutes() {
-	http.HandleFunc("/main_page", ServeMainPage)
-	http.HandleFunc("/user", user_routes.UserRoute)
+func LoadRoutes(group *gin.RouterGroup, db *gorm.DB) {
+	cat.CategoriaRouter(group, db)
+	gasto.GastoRouter(group, db)
+	gastoFixo.GastoFixoRouter(group, db)
+	gastoVariado.GastoVariadoRouter(group, db)
+	user.UserRoute(group, db)
 
-}
-
-func ServeMainPage(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "view/main_page/main_page.html")
 }
