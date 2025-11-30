@@ -1,6 +1,7 @@
 package services
 
 import (
+	credito "integrador/modulos/credito/repositories"
 	"integrador/modulos/pagamento/repositories"
 )
 
@@ -26,9 +27,10 @@ func erroGasto(tipo string) error {
 }
 
 type PagamentoService struct {
-	repo *repositories.PagamentoRepository
+	repo        *repositories.PagamentoRepository
+	repoCredito *credito.CreditoRepository
 }
 
-func NewPagamentoService(repo *repositories.PagamentoRepository) *PagamentoService {
-	return &PagamentoService{repo: repo}
+func NewPagamentoService(repo *repositories.PagamentoRepository, repoCredito *credito.CreditoRepository) *PagamentoService {
+	return &PagamentoService{repo: repo, repoCredito: repoCredito}
 }

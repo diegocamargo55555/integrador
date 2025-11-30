@@ -2,6 +2,7 @@ package services
 
 import (
 	"integrador/modulos/credito/repositories"
+	pagamento "integrador/modulos/pagamento/repositories"
 )
 
 type RequestError struct {
@@ -20,10 +21,23 @@ func erroData() error {
 	}
 }
 
-type CreditoService struct {
-	repo *repositories.CreditoRepository
+func erroCredito(data string) error {
+	return &RequestError{
+		description: "Já há um pagamento a credito associado a este gasto com data de vencimento para " + data + "!",
+	}
 }
 
-func NewCreditoService(repo *repositories.CreditoRepository) *CreditoService {
-	return &CreditoService{repo: repo}
+func erroPagamento() error {
+	return &RequestError{
+		description: "Não existe um pagamento associado a este gasto!",
+	}
+}
+
+type CreditoService struct {
+	repo     *repositories.CreditoRepository
+	repoPaga *pagamento.PagamentoRepository
+}
+
+func NewCreditoService(repo *repositories.CreditoRepository, repoPaga *pagamento.PagamentoRepository) *CreditoService {
+	return &CreditoService{repo: repo, repoPaga: repoPaga}
 }

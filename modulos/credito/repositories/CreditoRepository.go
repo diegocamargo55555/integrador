@@ -35,3 +35,8 @@ func (r *CreditoRepository) Update(fixo *Entidades.Credito) error {
 	result := r.Db.Model(&Entidades.Credito{}).Where("gasto_id = ?", fixo.GastoID).Update("data_vencimento", fixo.Data_Vencimento)
 	return result.Error
 }
+
+func (r *CreditoRepository) Delete(uuid string) error {
+	result := r.Db.Where("gasto_id = ?", uuid).Delete(&Entidades.Credito{})
+	return result.Error
+}
