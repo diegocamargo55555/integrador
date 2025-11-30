@@ -17,6 +17,27 @@ func NewUserController(userService *user_services.UserService) *UserController {
 	return &UserController{userService: *userService}
 }
 
+type LoginRequest struct {
+	Email string `json:"email" binding:"required,email"`
+	Senha string `json:"senha" binding:"required"`
+}
+
+func (h *UserController) Login(c *gin.Context) {
+	var credentials LoginRequest
+
+	if err := c.ShouldBindJSON(&credentials); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Dados inválidos"})
+		return
+	}
+
+	response, err := h.userService.LoginService(credentials.Email, credentials.Senha)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, response)
+}
 func (h *UserController) CreateUser(c *gin.Context) {
 	var user user_entities.Usuario
 
