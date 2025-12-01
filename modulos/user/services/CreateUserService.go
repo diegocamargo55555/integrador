@@ -2,7 +2,8 @@ package user_services
 
 import (
 	Entidades "integrador/modulos/user/entities"
-	"time" 
+	"integrador/shared/auth"
+	"time"
 )
 
 func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
@@ -21,6 +22,13 @@ func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
 	if dataNascimento.AddDate(18, 0, 0).After(time.Now()) {
 		return erroMenorDeIdade()
 	}
+
+	hashedPassword, err := auth.HashPassword(user.Senha)
+	if err != nil {
+		return err
+	}
+	
+	user.Senha = hashedPassword
 	return s.repo.Create(user)
 
 }

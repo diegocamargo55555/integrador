@@ -5,23 +5,23 @@ import (
 	"time"
 )
 
-func (s *GastoFixoService) UpdateGastoFixo(novoGasto *Entidades.Fixo) error {
-	resultFixo, err := s.repo.GetByGastoID(novoGasto.GastoID)
+func (s *GastoFixoService) CreateFixoService(fixo *Entidades.Fixo) error {
+	resultFixo, err := s.repo.GetByGastoID(fixo.GastoID)
 	if err == nil {
 		err := erroGastoFixo(resultFixo.Data_Vencimento)
 		return err
 	}
-	resultGasto, err := s.repoGasto.GetByID(novoGasto.GastoID)
+	resultGasto, err := s.repoGasto.GetByID(fixo.GastoID)
 
 	if err != nil {
 		err := erroGastoId()
 		return err
 	}
-	if novoGasto.Data_Vencimento == "" {
+	if fixo.Data_Vencimento == "" {
 		err := erroData()
 		return err
 	}
 	resultGasto.UpdatedAt = time.Now()
 	s.repoGasto.Update(resultGasto)
-	return s.repo.Update(novoGasto)
+	return s.repo.Create(fixo)
 }

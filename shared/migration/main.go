@@ -1,4 +1,4 @@
-package migration
+package main
 
 import (
 	"time"
@@ -70,6 +70,7 @@ type Gasto struct {
 	GastoFixos    []Fixo         `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	GastoVariados []Variados     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Credito       []Credito      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Pagamento     []Pagamento    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt     time.Time
 	UpdatedAt     time.Time
 }
@@ -94,7 +95,7 @@ type Credito struct {
 	Data_Vencimento datatypes.Date `gorm:"not null"`
 }
 
-func executemigration() {
+func main() {
 	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {

@@ -6,7 +6,6 @@ import (
 
 type RequestError struct {
 	description string
-
 	Err error
 }
 

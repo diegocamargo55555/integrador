@@ -13,7 +13,11 @@ type UserRepository struct {
 func NewUserRepository(Db *gorm.DB) *UserRepository {
 	return &UserRepository{Db: Db}
 }
-
+func (r *UserRepository) GetByEmail(email string) (*Entidades.Usuario, error) {
+	var user Entidades.Usuario
+	result := r.Db.Where("email = ?", email).First(&user)
+	return &user, result.Error
+}
 func (r *UserRepository) GetAllUsers() ([]Entidades.Usuario, error) {
 	var users []Entidades.Usuario
 	resultado := r.Db.Find(&users)
