@@ -16,10 +16,10 @@ type Usuario struct {
 	Saldo                float64        `gorm:"default:0"`
 	Data_Nascimento      datatypes.Date `gorm:"not null"`
 	Email                string         `gorm:"uniqueIndex"`
-	Entradas             []Entrada
-	Planejamentos        []Planejamento
-	Categorias           []Categoria
-	Gastos               []Gasto
+	Entradas             []Entrada      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Planejamentos        []Planejamento `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Categorias           []Categoria    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Gastos               []Gasto        `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	CreatedAt            time.Time
 	UpdatedAt            time.Time
 }
@@ -48,7 +48,7 @@ type Planejamento struct {
 
 type Categoria struct {
 	ID             datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome           string         `gorm:"uniqueIndex"`
+	Nome           string
 	Valor_Esperado float64        `gorm:"not null"`
 	Cor            string         `gorm:"default:#ffffff"`
 	Limite         float64        `gorm:"not null"`
