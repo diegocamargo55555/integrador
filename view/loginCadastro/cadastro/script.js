@@ -20,7 +20,7 @@ class FormularioCadastro {
             },
             senha: (valor) => {
                 if (!valor) return { valido: false, mensagem: 'Senha é obrigatória' };
-                if (valor.length < 6) return { valido: false, mensagem: 'Mínimo de 6 caracteres' };
+                if (valor.length < 9) return { valido: false, mensagem: 'Mínimo de 9 caracteres' };
                 return { valido: true };
             },
             confirmaSenha: (valor) => {
@@ -165,7 +165,7 @@ class FormularioCadastro {
         this.botaoCadastrar.classList.add('carregando');
 
         const dadosUsuario = {
-            nome: document.getElementById('nome').value,
+            name: document.getElementById('nome').value,
             email: document.getElementById('email').value,
             senha: document.getElementById('senha').value
         };
@@ -202,7 +202,14 @@ class FormularioCadastro {
 
         } catch (err) {
             console.error(err);
-            this.mostrarErro('email', err.message);
+            
+            const msg = err.message.toLowerCase();
+
+            if (msg.includes('senha') || msg.includes('password')) {
+                this.mostrarErro('senha', err.message);
+            } else {
+                this.mostrarErro('email', err.message);
+            }
         } finally {
             this.estaEnviando = false;
             this.botaoCadastrar.classList.remove('carregando');

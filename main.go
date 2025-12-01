@@ -27,17 +27,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// esse funciona no Insomnia! Estou testando os services nele
+
 	r := gin.Default()
+
+	r.Static("/view", "./view")
 
 	caminho := r.Group("/aginisia")
 	routes.LoadRoutes(caminho, db)
-	r.Run(":8080")
 
-	// fmt.Println("Servidor rodando em http://localhost:8080")
-	// // O segundo argumento (nil) informa para usar o roteador padrão
-	// err := http.ListenAndServe(":8080", nil)
-	// if err != nil {
-	// 	log.Fatal("Erro ao iniciar o servidor: ", err)
-	// }
+	r.Run(":8080")
 }
