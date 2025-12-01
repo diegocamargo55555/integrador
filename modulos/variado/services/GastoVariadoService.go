@@ -1,6 +1,7 @@
 package services
 
 import (
+	gasto "integrador/modulos/gasto/repositories"
 	"integrador/modulos/variado/repositories"
 )
 
@@ -19,11 +20,18 @@ func erroData() error {
 		description: "A data de gasto é obrigatoria!",
 	}
 }
-
-type GastoVariadoService struct {
-	repo *repositories.GastoVariadoRepository
+func erroGastoId() error {
+	return &RequestError{description: "Este gasto não existe!"}
+}
+func erroGastoFixo(data_vencimento string) error {
+	return &RequestError{description: "Já existe um gasto fixo para este gasto com data de vencimento para " + data_vencimento + " !"}
 }
 
-func NewGastoVariadoService(repo *repositories.GastoVariadoRepository) *GastoVariadoService {
-	return &GastoVariadoService{repo: repo}
+type GastoVariadoService struct {
+	repo      *repositories.GastoVariadoRepository
+	repoGasto *gasto.GastoRepository
+}
+
+func NewGastoVariadoService(repo *repositories.GastoVariadoRepository, repoGasto *gasto.GastoRepository) *GastoVariadoService {
+	return &GastoVariadoService{repo: repo, repoGasto: repoGasto}
 }

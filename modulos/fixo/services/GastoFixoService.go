@@ -1,7 +1,8 @@
 package services
 
 import (
-	"integrador/modulos/fixo/repositories"
+	gastoFixo "integrador/modulos/fixo/repositories"
+	gasto "integrador/modulos/gasto/repositories"
 )
 
 type RequestError struct {
@@ -20,10 +21,18 @@ func erroData() error {
 	}
 }
 
-type GastoFixoService struct {
-	repo *repositories.GastoFixoRepository
+func erroGastoId() error {
+	return &RequestError{description: "Este gasto não existe!"}
+}
+func erroGastoFixo(data_vencimento string) error {
+	return &RequestError{description: "Já existe um gasto fixo para este gasto com data de vencimento para " + data_vencimento + " !"}
 }
 
-func NewGastoFixoService(repo *repositories.GastoFixoRepository) *GastoFixoService {
-	return &GastoFixoService{repo: repo}
+type GastoFixoService struct {
+	repo      *gastoFixo.GastoFixoRepository
+	repoGasto *gasto.GastoRepository
+}
+
+func NewGastoFixoService(repo *gastoFixo.GastoFixoRepository, repoGasto *gasto.GastoRepository) *GastoFixoService {
+	return &GastoFixoService{repo: repo, repoGasto: repoGasto}
 }
