@@ -1,6 +1,7 @@
 package user_services
 
 import (
+	categoria "integrador/modulos/categoria/repositories"
 	"integrador/modulos/user/repositories"
 )
 
@@ -32,9 +33,10 @@ func erroMenorDeIdade() error {
 }
 
 type UserService struct {
-	repo *repositories.UserRepository
+	repo    *repositories.UserRepository
+	repoCat *categoria.CategoriaRepository
 }
 
-func NewUserService(repo *repositories.UserRepository) *UserService {
-	return &UserService{repo: repo}
+func NewUserService(repo *repositories.UserRepository, repoCat *categoria.CategoriaRepository) *UserService {
+	return &UserService{repo: repo, repoCat: repoCat}
 }

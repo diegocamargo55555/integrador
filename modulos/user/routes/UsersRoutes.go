@@ -1,6 +1,7 @@
 package user_routes
 
 import (
+	categoria "integrador/modulos/categoria/repositories"
 	user_controllers "integrador/modulos/user/controllers"
 	"integrador/modulos/user/repositories"
 	user_services "integrador/modulos/user/services"
@@ -11,7 +12,8 @@ import (
 
 func UserRoute(group *gin.RouterGroup, db *gorm.DB) {
 	userRepository := repositories.NewUserRepository(db)
-	userService := user_services.NewUserService(userRepository)
+	catRepository := categoria.NewCategoryRepository(db)
+	userService := user_services.NewUserService(userRepository, catRepository)
 	userController := user_controllers.NewUserController(userService)
 
 	group.POST("/login", userController.Login)
