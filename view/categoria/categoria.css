@@ -186,3 +186,94 @@
     min-height: 200px;
     display: flex; justify-content: center; align-items: center;
 }
+
+/* Telas Medias e Pequenas */
+@media (max-width: 1024px) {
+    .area-conteudo-dividida {
+        flex-direction: column;
+        height: auto !important; /* permite scroll verticall */
+        overflow: visible;
+        gap: 30px;
+        padding-bottom: 20px;
+    }
+
+    .painel-categorias, 
+    .painel-resumo-lateral {
+        flex: none;
+        width: 100%;
+        overflow: visible;
+    }
+
+    .container-grafico {
+        min-height: 250px;
+    }
+
+    .container-tabela {
+        overflow-x: auto;
+    }
+}
+
+/* mobile */
+@media (max-width: 768px) {
+    
+    .cabecalho-pagina {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .navegador-mes {
+        width: 100%;
+        justify-content: space-between; 
+    }
+
+    .cabecalho-painel {
+        flex-direction: column;
+        align-items: stretch; 
+        gap: 15px;
+        text-align: center;
+    }
+
+    .btn-nova-categoria {
+        width: 100%; 
+        padding: 15px;
+    }
+
+    .painel-categorias {
+        padding: 15px;
+    }
+    
+    .container-tabela {
+        height: auto; 
+        max-height: 400px; 
+    }
+
+    .tabela-categorias th, 
+    .tabela-categorias td {
+        white-space: nowrap;
+        padding: 12px 10px;
+    }
+
+    .tabela-categorias {
+        font-size: 0.85em;
+    }
+
+    .painel-resumo-lateral {
+        gap: 15px;
+    }
+
+    .card-resumo {
+        padding: 15px;
+    }
+    
+    .modal-conteudo {
+        width: 100%;
+        height: auto;
+        border-radius: 20px 20px 0 0;
+        position: fixed;
+        bottom: 0;
+        margin: 0;
+        max-width: none;
+    }
+}
