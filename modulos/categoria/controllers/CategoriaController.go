@@ -62,20 +62,26 @@ func (h *CategoriaController) ListCategorias(c *gin.Context) {
 }
 
 func (h *CategoriaController) UpdateCategoria(c *gin.Context) {
+	print("65")
 	id := c.Param("ID")
 	categoria, err := h.categoriaService.GetCategoriaById(id)
+	print("69")
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Categoria não encontrada!"})
+		print("72")
 		return
 	}
 	var novaCategoria entities.Categoria = *categoria
+	print("76")
 	if err := c.ShouldBindJSON(&novaCategoria); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	print("81")
 	if err := h.categoriaService.UpdateCategoria(&novaCategoria, categoria); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+	print("86")
 	c.JSON(http.StatusOK, novaCategoria)
 }

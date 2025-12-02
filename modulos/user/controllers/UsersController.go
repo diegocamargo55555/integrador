@@ -23,6 +23,7 @@ type LoginRequest struct {
 }
 
 func (h *UserController) Login(c *gin.Context) {
+	print("aquiiiiiiiiiiii")
 	var credentials LoginRequest
 
 	if err := c.ShouldBindJSON(&credentials); err != nil {
