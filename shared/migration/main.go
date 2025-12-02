@@ -60,28 +60,18 @@ type Categoria struct {
 }
 
 type Gasto struct {
-	ID            datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome          string         `gorm:"not null"`
-	Mes           int            `gorm:"not null"`
-	Foi_Pago      bool           `gorm:"not null"`
-	Valor         float64        `gorm:"default:0"`
-	UsuarioId     datatypes.UUID `gorm:"not null"`
-	CategoriaId   datatypes.UUID `gorm:"not null"`
-	GastoFixos    []Fixo         `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	GastoVariados []Variados     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Credito       []Credito      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Pagamento     []Pagamento    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CreatedAt     time.Time
-	UpdatedAt     time.Time
-}
-
-type Fixo struct {
-	GastoID         datatypes.UUID `gorm:"not null"`
-	Data_Vencimento datatypes.Date `gorm:"not null"`
-}
-type Variados struct {
-	GastoID    datatypes.UUID `gorm:"not null"`
-	Data_Gasto datatypes.Date `gorm:"not null"`
+	ID          datatypes.UUID `gorm:"default:uuid_generate_v4()"`
+	Nome        string         `gorm:"not null"`
+	Data        datatypes.Date `gorm:"not null"`
+	Foi_Pago    bool           `gorm:"not null"`
+	Fixo        bool           `goorm:"not null"`
+	Valor       float64        `gorm:"default:0"`
+	UsuarioId   datatypes.UUID `gorm:"not null"`
+	CategoriaId datatypes.UUID `gorm:"not null"`
+	Credito     []Credito      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Pagamento   []Pagamento    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
 }
 
 type Pagamento struct {
@@ -101,5 +91,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&Usuario{}, &Entrada{}, &Planejamento{}, &Categoria{}, &Gasto{}, &Fixo{}, &Variados{}, &Pagamento{}, &Credito{})
+	db.AutoMigrate(&Usuario{}, &Entrada{}, &Planejamento{}, &Categoria{}, &Gasto{}, &Pagamento{}, &Credito{})
 }
