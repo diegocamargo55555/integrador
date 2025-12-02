@@ -62,8 +62,9 @@ type Categoria struct {
 type Gasto struct {
 	ID            datatypes.UUID `gorm:"default:uuid_generate_v4()"`
 	Nome          string         `gorm:"not null"`
-	Mes           int            `gorm:"not null"`
+	Data          datatypes.Date `gorm:"not null"`
 	Foi_Pago      bool           `gorm:"not null"`
+	Fixo          bool           `goorm:"not null"`
 	Valor         float64        `gorm:"default:0"`
 	UsuarioId     datatypes.UUID `gorm:"not null"`
 	CategoriaId   datatypes.UUID `gorm:"not null"`

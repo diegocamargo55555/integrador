@@ -7,8 +7,9 @@ import (
 type Gasto struct {
 	ID          string  `gorm:"default:uuid_generate_v4()"`
 	Nome        string  `json:"name"`
-	Mes         int     `json:"mes"`
 	Foi_Pago    bool    `json:"foi_pago"`
+	Fixo        bool    `json:"fixo"`
+	Data        string  `json:"data"`
 	Valor       float64 `json:"valor"`
 	UsuarioId   string  `json:"usuario_id" binding:"uuid"`
 	CategoriaId string  `json:"categoria_id" binding:"uuid"`
