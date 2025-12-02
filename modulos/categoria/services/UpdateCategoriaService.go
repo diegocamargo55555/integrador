@@ -13,9 +13,9 @@ func (s *CategoriaService) UpdateCategoria(novaCategoria *Entidades.Categoria, c
 			return err
 		}
 	}
-	if categoria.Limite < 0 || categoria.Valor_Esperado < 0 {
+	if novaCategoria.Limite < 0 || novaCategoria.Valor_Esperado < 0 {
 		err := erroLimite()
 		return err
 	}
-	return s.repo.Update(categoria)
+	return s.repo.Update(novaCategoria)
 }
