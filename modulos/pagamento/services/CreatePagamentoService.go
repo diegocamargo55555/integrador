@@ -29,3 +29,18 @@ func (s *PagamentoService) CreatePagamentoService(pagamento *Entidades.Pagamento
 	s.repoUser.Update(user)
 	return s.repo.Create(pagamento)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
