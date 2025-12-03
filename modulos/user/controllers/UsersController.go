@@ -23,7 +23,6 @@ type LoginRequest struct {
 }
 
 func (h *UserController) Login(c *gin.Context) {
-	print("aquiiiiiiiiiiii")
 	var credentials LoginRequest
 
 	if err := c.ShouldBindJSON(&credentials); err != nil {
@@ -38,6 +37,13 @@ func (h *UserController) Login(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, response)
+}
+
+func GetUserProfile(c *gin.Context) {
+	user, _ := c.Get("currentUser")
+	c.JSON(200, gin.H{
+		"user": user,
+	})
 }
 func (h *UserController) CreateUser(c *gin.Context) {
 	var user user_entities.Usuario
