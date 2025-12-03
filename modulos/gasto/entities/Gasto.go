@@ -5,14 +5,15 @@ import (
 )
 
 type Gasto struct {
-	ID          string  `gorm:"default:uuid_generate_v4()"`
-	Nome        string  `json:"name"`
-	Foi_Pago    bool    `json:"foi_pago"`
-	Fixo        bool    `json:"fixo"`
-	Data        string  `json:"data"`
-	Valor       float64 `json:"valor"`
-	UsuarioId   string  `json:"usuario_id" binding:"uuid"`
-	CategoriaId string  `json:"categoria_id" binding:"uuid"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID             string  `gorm:"default:uuid_generate_v4()"`
+	Nome           string  `json:"name"`
+	Foi_Pago       bool    `json:"foi_pago"`
+	Fixo           bool    `json:"fixo"`
+	Data           string  `json:"data"`
+	Valor          float64 `json:"valor"`
+	UsuarioId      string  `json:"usuario_id" binding:"uuid"`
+	CategoriaId    string  `json:"categoria_id" binding:"uuid"`
+	PlanejamentoId *string `json:"planejamento_id" validate:"uuid"`
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }

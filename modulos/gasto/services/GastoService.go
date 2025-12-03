@@ -2,6 +2,7 @@ package services
 
 import (
 	"integrador/modulos/gasto/repositories"
+	planejamento "integrador/modulos/planejamento/repositories"
 )
 
 type RequestError struct {
@@ -14,22 +15,27 @@ func (r *RequestError) Error() string {
 	return (r.description)
 }
 
-func erroNome() error {
-	return &RequestError{
-		description: "Já existe um gasto com esse nome!",
-	}
-}
-
 func erroValor() error {
 	return &RequestError{
 		description: "O valor não pode ser negativo!",
 	}
 }
-
-type GastoService struct {
-	repo *repositories.GastoRepository
+func gastoNaoExiste() error {
+	return &RequestError{
+		description: "Este gasto não existe!",
+	}
+}
+func planNaoExiste() error {
+	return &RequestError{
+		description: "Este planejamento não existe!",
+	}
 }
 
-func NewGastoService(repo *repositories.GastoRepository) *GastoService {
-	return &GastoService{repo: repo}
+type GastoService struct {
+	repo     *repositories.GastoRepository
+	planRepo *planejamento.PlanejamentoRepository
+}
+
+func NewGastoService(repo *repositories.GastoRepository, planRepo *planejamento.PlanejamentoRepository) *GastoService {
+	return &GastoService{repo: repo, planRepo: planRepo}
 }

@@ -3,6 +3,9 @@ package user_services
 import (
 	"errors"
 	"integrador/shared/auth"
+	"time"
+
+	"github.com/golang-jwt/jwt/v4"
 )
 
 type LoginResponse struct {
@@ -25,7 +28,9 @@ func (s *UserService) LoginService(email, senha string) (*LoginResponse, error) 
 		return nil, errors.New("usuário ou senha inválidos")
 	}
 
-	token, err := auth.GenerateJWT(user.ID, user.Email)
+	generateToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{"id": user.ID, "exp": time.Now().Add(time.Hour * 24).Unix()})
+	token, err := generateToken.SignedString([]byte("chave"))
+
 	if err != nil {
 		return nil, errors.New("erro ao gerar token")
 	}

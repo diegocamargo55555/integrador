@@ -5,14 +5,20 @@ import (
 )
 
 func (s *GastoService) CreateGastoService(gasto *Entidades.Gasto) error {
-	resultado, err := s.repo.GetByName(gasto.Nome)
-	if resultado.Nome == gasto.Nome || err == nil {
-		err := erroNome()
-		return err
-	}
 	if gasto.Valor < 0 {
 		err := erroValor()
 		return err
 	}
+
+	if gasto.PlanejamentoId != nil {
+		plan, err := s.planRepo.GetByID(*gasto.PlanejamentoId)
+		if err != nil {
+			err := planNaoExiste()
+			return err
+		}
+		plan.Valor_Atual += gasto.Valor
+		s.planRepo.Update(plan)
+	}
+
 	return s.repo.Create(gasto)
 }
