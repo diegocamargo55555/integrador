@@ -4,11 +4,10 @@ import (
 	Entidades "integrador/modulos/entrada/entities"
 )
 
-func (s *EntradaService) UpdateEntrada(novaentrada *Entidades.Entrada, entrada *Entidades.Entrada) error {
+func (s *EntradaService) UpdateEntrada(entrada *Entidades.Entrada) error {
 
-	if novaentrada.Valor < 0 {
-		err := erroValor()
-		return err
+	if entrada.Valor < 0 {
+		return erroValor()
 	}
 
 	return s.repo.Update(entrada)

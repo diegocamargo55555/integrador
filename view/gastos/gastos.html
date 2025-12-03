@@ -14,7 +14,7 @@
     <div class="container-app">
         <nav class="barra-lateral">
             <div class="area-logo">
-                <span class="icone-nav logo" href="view/assets/image.png">Logo</span>
+                <span class="icone-nav logo">Logo</span>
             </div>
             <ul class="nav-lateral">
                 <li class="item-nav ativo">
@@ -41,7 +41,7 @@
 
                 <div class="widget-saldo">
                     <span class="label-saldo">Saldo</span>
-                    <strong class="valor-saldo">R$ 25,00</strong>
+                    <strong class="valor-saldo">R$ 0,00</strong>
                 </div>
 
                 <div class="barra-ferramentas">
@@ -58,14 +58,10 @@
                     </div>
 
                     <div class="abas-acao">
-                        <button class="botao-acao botao-acao--receita"
-                            onclick="document.getElementById('modal-nova-entrada').style.display='flex'"
-                            title="Nova Entrada">
+                        <button class="botao-acao botao-acao--receita" onclick="abrirModalNovaEntrada()">
                             + <span class="texto-btn">Entrada</span>
                         </button>
-                        <button class="botao-acao botao-acao--despesa"
-                            onclick="document.getElementById('modal-nova-saida').style.display='flex'"
-                            title="Nova Saída">
+                        <button class="botao-acao botao-acao--despesa" onclick="abrirModalNovaSaida()">
                             - <span class="texto-btn">Saída</span>
                         </button>
                     </div>
@@ -81,14 +77,7 @@
                             <div class="emblema-coluna receita">+</div>
                         </div>
                         <ul class="lista-dados">
-                            <li class="item-dados">
-                                <div class="info-item">
-                                    <span class="nome-item">Salário</span>
-                                    <span class="meta-item">12/09</span>
-                                </div>
-                                <span class="valor-item receita">+ R$ 12.000,00</span>
-                            </li>
-                        </ul>
+                            </ul>
                     </section>
 
                     <section class="coluna-dados">
@@ -97,14 +86,7 @@
                             <div class="emblema-coluna despesa">-</div>
                         </div>
                         <ul class="lista-dados">
-                            <li class="item-dados">
-                                <div class="info-item">
-                                    <span class="nome-item">Cartão Nubank</span>
-                                    <span class="meta-item">15/09 • Crédito</span>
-                                </div>
-                                <span class="valor-item despesa">- R$ 112,99</span>
-                            </li>
-                        </ul>
+                            </ul>
                     </section>
 
                     <section class="coluna-dados">
@@ -113,14 +95,7 @@
                             <div class="emblema-coluna fixo">●</div>
                         </div>
                         <ul class="lista-dados">
-                            <li class="item-dados">
-                                <div class="info-item">
-                                    <span class="nome-item">Internet</span>
-                                    <span class="meta-item">10/09 • Débito</span>
-                                </div>
-                                <span class="valor-item despesa">- R$ 112,99</span>
-                            </li>
-                        </ul>
+                            </ul>
                     </section>
 
                 </div>
@@ -131,16 +106,14 @@
     <div class="modal-fundo" id="modal-nova-entrada">
         <div class="modal-conteudo">
             <div class="cabecalho-modal">
-                <h2 class="titulo-modal">Nova Entrada</h2>
-                <button class="fechar-modal"
-                    onclick="document.getElementById('modal-nova-entrada').style.display='none'">×</button>
+                <h2 class="titulo-modal" id="titulo-modal-entrada">Nova Entrada</h2>
+                <button class="fechar-modal">×</button>
             </div>
 
-            <form class="formulario-transacao" action="#" method="post">
+            <form class="formulario-transacao" id="form-entrada">
                 <div class="grupo-form">
                     <label for="entrada-nome" class="rotulo-form">Descrição</label>
-                    <input type="text" id="entrada-nome" class="input-form" required
-                        placeholder="Ex: Freela, Salário...">
+                    <input type="text" id="entrada-nome" class="input-form" required placeholder="Ex: Freela...">
                 </div>
                 <div class="grupo-form-linha">
                     <div class="grupo-form">
@@ -149,14 +122,12 @@
                     </div>
                     <div class="grupo-form">
                         <label for="entrada-valor" class="rotulo-form">Valor (R$)</label>
-                        <input type="number" id="entrada-valor" class="input-form" required step="0.01"
-                            placeholder="0,00">
+                        <input type="number" id="entrada-valor" class="input-form" required step="0.01" placeholder="0,00">
                     </div>
                 </div>
                 <div class="acoes-form">
-                    <button type="button" class="botao-form-cancelar"
-                        onclick="document.getElementById('modal-nova-entrada').style.display='none'">Cancelar</button>
-                    <button type="submit" class="botao-form-enviar">Salvar Entrada</button>
+                    <button type="button" class="botao-form-cancelar">Cancelar</button>
+                    <button type="submit" class="botao-form-enviar">Salvar</button>
                 </div>
             </form>
         </div>
@@ -165,22 +136,19 @@
     <div class="modal-fundo" id="modal-nova-saida">
         <div class="modal-conteudo">
             <div class="cabecalho-modal">
-                <h2 class="titulo-modal">Nova Saída</h2>
-                <button class="fechar-modal"
-                    onclick="document.getElementById('modal-nova-saida').style.display='none'">×</button>
+                <h2 class="titulo-modal" id="titulo-modal-saida">Nova Saída</h2>
+                <button class="fechar-modal">×</button>
             </div>
 
-            <form class="formulario-transacao" action="#" method="post">
+            <form class="formulario-transacao" id="form-saida">
                 <div class="grupo-form">
                     <label for="saida-nome" class="rotulo-form">Descrição</label>
-                    <input type="text" id="saida-nome" class="input-form" required placeholder="Ex: Aluguel, Pizza...">
+                    <input type="text" id="saida-nome" class="input-form" required placeholder="Ex: Aluguel...">
                 </div>
                 <div class="grupo-form">
                     <label for="saida-categoria" class="rotulo-form">Categoria</label>
                     <select id="saida-categoria" class="input-form">
-                        <option>Moradia</option>
-                        <option>Alimentação</option>
-                        <option>Transporte</option>
+                        <option value="">Carregando...</option>
                     </select>
                 </div>
 
@@ -191,8 +159,7 @@
                     </div>
                     <div class="grupo-form">
                         <label for="saida-valor" class="rotulo-form">Valor (R$)</label>
-                        <input type="number" id="saida-valor" class="input-form" required step="0.01"
-                            placeholder="0,00">
+                        <input type="number" id="saida-valor" class="input-form" required step="0.01" placeholder="0,00">
                     </div>
                 </div>
 
@@ -202,16 +169,13 @@
                 </div>
 
                 <div class="acoes-form">
-                    <button type="button" class="botao-form-cancelar"
-                        onclick="document.getElementById('modal-nova-saida').style.display='none'">Cancelar</button>
-                    <button type="submit" class="botao-form-enviar despesa">Lançar Despesa</button>
+                    <button type="button" class="botao-form-cancelar">Cancelar</button>
+                    <button type="submit" class="botao-form-enviar despesa">Salvar</button>
                 </div>
             </form>
         </div>
     </div>
+
     <script src="script-gastos.js"></script>
-    <script src="../script.js"></script>
-
 </body>
-
 </html>

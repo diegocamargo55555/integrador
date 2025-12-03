@@ -1,9 +1,7 @@
 package services
 
 import (
-	gast "integrador/modulos/gasto/repositories"
 	"integrador/modulos/pagamento/repositories"
-	userRep "integrador/modulos/user/repositories"
 )
 
 type RequestError struct {
@@ -26,23 +24,11 @@ func erroGasto(tipo string) error {
 		description: " Já há um pagamento de" + tipo + "associado a este gasto! ",
 	}
 }
-func erroUser() error {
-	return &RequestError{
-		description: "Algo deu errado!",
-	}
-}
-func erroGastoNaoExiste() error {
-	return &RequestError{
-		description: "O gasto que você está tentando pagar não existe!",
-	}
-}
 
 type PagamentoService struct {
-	repo      *repositories.PagamentoRepository
-	repoUser  *userRep.UserRepository
-	repoGasto *gast.GastoRepository
+	repo        *repositories.PagamentoRepository
 }
 
-func NewPagamentoService(repo *repositories.PagamentoRepository, repoUser *userRep.UserRepository, repoGasto *gast.GastoRepository) *PagamentoService {
-	return &PagamentoService{repo: repo, repoUser: repoUser, repoGasto: repoGasto}
+func NewPagamentoService(repo *repositories.PagamentoRepository) *PagamentoService {
+	return &PagamentoService{repo: repo}
 }

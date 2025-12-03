@@ -1,33 +1,58 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const API_URL = '/aginisia/categoria';
+    const API_URL_CATEGORIAS = '/aginisia/categoria';
+    const API_URL_GASTOS = '/aginisia/gasto';
+    
     const ctxPizza = document.getElementById('categoriasPieChart');
     const modalCat = document.getElementById('modal-nova-categoria');
     const tabelaBody = document.querySelector('.tabela-categorias tbody');
     const tabelaResumoBody = document.querySelector('.tabela-resumo tbody');
     const formCat = document.getElementById('form-nova-categoria');
+    
     let chartInstance = null;
     let listaCategorias = [];
     let categoriaEditandoID = null;
 
-    async function carregarCategorias() {
+    async function carregarDados() {
         try {
-            const usuarioId = localStorage.getItem('usuario_id');
-            if (!usuarioId) {
-                alert("Sessão expirada. Faça login novamente.");
-                window.location.href = '../login/login.html';
-                return;
-            }
-            const response = await fetch(API_URL+"/user/"+usuarioId);
-            if (!response.ok) throw new Error('Erro ao buscar categorias');
+            const [resCat, resGastos] = await Promise.all([
+                fetch(API_URL_CATEGORIAS),
+                fetch(API_URL_GASTOS)
+            ]);
+
+            if (!resCat.ok) throw new Error('Erro ao buscar categorias');
             
-            listaCategorias = await response.json();
+            const categoriasRaw = await resCat.json();
+            const gastosRaw = resGastos.ok ? await resGastos.json() : [];
+
+            const somaPorCategoria = {};
+
+            gastosRaw.forEach(gasto => {
+                const catId = gasto.categoria_id || gasto.CategoriaId;
+                const valor = parseFloat(gasto.valor || gasto.Valor || 0);
+
+                if (catId) {
+                    if (!somaPorCategoria[catId]) {
+                        somaPorCategoria[catId] = 0;
+                    }
+                    somaPorCategoria[catId] += valor;
+                }
+            });
+
+            listaCategorias = categoriasRaw.map(cat => {
+                const idReal = cat.id || cat.ID;
+                return {
+                    ...cat, 
+                    total_gasto: somaPorCategoria[idReal] || 0 
+                };
+            });
             
             renderizarTabela();
             renderizarResumoEGrafico();
+
         } catch (error) {
             console.error(error);
             if(tabelaBody) {
-                tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Erro ao carregar dados. Verifique se o servidor está rodando.</td></tr>';
+                tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Erro de conexão.</td></tr>';
             }
         }
     }
@@ -54,7 +79,7 @@ document.addEventListener("DOMContentLoaded", function () {
         };
 
         const method = categoriaEditandoID ? 'PUT' : 'POST';
-        const url = categoriaEditandoID ? `${API_URL}/${categoriaEditandoID}` : API_URL;
+        const url = categoriaEditandoID ? `${API_URL_CATEGORIAS}/${categoriaEditandoID}` : API_URL_CATEGORIAS;
 
         try {
             const response = await fetch(url, {
@@ -70,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alert(categoriaEditandoID ? 'Categoria atualizada!' : 'Categoria criada!');
             fecharModal(modalCat);
-            carregarCategorias(); 
+            carregarDados(); 
         } catch (error) {
             console.error(error);
             alert('Erro: ' + error.message);
@@ -81,11 +106,11 @@ document.addEventListener("DOMContentLoaded", function () {
         if (!confirm(`Tem certeza que deseja excluir a categoria "${nome}"?`)) return;
 
         try {
-            const response = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+            const response = await fetch(`${API_URL_CATEGORIAS}/${id}`, { method: 'DELETE' });
             if (!response.ok) throw new Error('Erro ao excluir');
             
             alert('Categoria excluída!');
-            carregarCategorias();
+            carregarDados();
         } catch (error) {
             console.error(error);
             alert('Não foi possível excluir.');
@@ -103,12 +128,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
         listaCategorias.forEach(cat => {
             const idReal = cat.id || cat.ID; 
-            
-            const gastoAtual = 0; 
+            const gastoAtual = cat.total_gasto; 
             const limite = cat.limite || 0;
-            const porcentagem = limite > 0 ? (gastoAtual / limite) * 100 : 0;
+            
+            let porcentagem = 0;
+            if (limite > 0) porcentagem = (gastoAtual / limite) * 100;
+            
+            const larguraBarra = porcentagem > 100 ? 100 : porcentagem;
             const disponivel = limite - gastoAtual;
             const nomeDisplay = cat.name || "Sem Nome"; 
+            const corBarra = disponivel < 0 ? '#e74c3c' : cat.cor; 
 
             const tr = document.createElement('tr');
             tr.classList.add('linha-principal');
@@ -121,12 +150,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 </td>
                 <td>
                     <div class="barra-progresso">
-                        <div class="progresso-preenchido" style="width: ${porcentagem}%; background-color: ${cat.cor}"></div>
+                        <div class="progresso-preenchido" style="width: ${larguraBarra}%; background-color: ${corBarra}"></div>
                         <span class="texto-progresso">${porcentagem.toFixed(1)}%</span>
                     </div>
                 </td>
-                <td>${formatarMoeda(disponivel)}</td>
-                <td>${formatarMoeda(limite)}</td>
+                <td style="color: ${disponivel < 0 ? 'red' : 'inherit'}">${formatarMoeda(disponivel)}</td>
+                <td>${formatarMoeda(gastoAtual)} / ${formatarMoeda(limite)}</td>
                 <td class="col-acoes">
                     <div class="grupo-botoes-acao">
                         <button class="btn-pequeno btn-editar" onclick="window.prepararEdicao('${idReal}')">✏️</button>
@@ -145,7 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><span style="color:${cat.cor}">●</span> ${cat.name}</td>
-                    <td>${formatarMoeda(0)}</td> 
+                    <td>${formatarMoeda(cat.total_gasto)}</td> 
                     <td>${formatarMoeda(cat.limite)}</td>
                 `;
                 tabelaResumoBody.appendChild(tr);
@@ -154,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         if (ctxPizza) {
             const labels = listaCategorias.map(c => c.name);
-            const dataLimites = listaCategorias.map(c => c.limite);
+            const dados = listaCategorias.map(c => c.total_gasto); 
             const cores = listaCategorias.map(c => c.cor);
 
             if (chartInstance) {
@@ -166,7 +195,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 data: {
                     labels: labels,
                     datasets: [{
-                        data: dataLimites,
+                        label: 'Gasto Atual',
+                        data: dados,
                         backgroundColor: cores,
                         borderWidth: 0,
                         hoverOffset: 10
@@ -176,7 +206,17 @@ document.addEventListener("DOMContentLoaded", function () {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } }
+                        legend: { position: 'bottom', labels: { boxWidth: 10, font: { size: 10 } } },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) label += ': ';
+                                    label += context.raw.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                                    return label;
+                                }
+                            }
+                        }
                     }
                 }
             });
@@ -237,5 +277,5 @@ document.addEventListener("DOMContentLoaded", function () {
         btnFecharX.addEventListener('click', () => fecharModal(modalCat));
     }
 
-    carregarCategorias();
+    carregarDados();
 });

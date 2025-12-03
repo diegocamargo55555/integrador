@@ -39,7 +39,7 @@ func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
 	catViagem.Nome = "Viagem"
 	catViagem.Valor_Esperado = 100
 	catViagem.Limite = 100
-	catViagem.Cor = "20774b"
+	catViagem.Cor = "#20774b"
 	catViagem.UsuarioId = userNovo.ID
 	catViagem.CreatedAt = time.Now()
 	catViagem.UpdatedAt = time.Now()
@@ -54,14 +54,14 @@ func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
 	catMercado.UsuarioId = userNovo.ID
 	catMercado.CreatedAt = time.Now()
 	catMercado.UpdatedAt = time.Now()
-	catMercado.Cor = "f5cd48"
+	catMercado.Cor = "#f5cd48"
 	err = s.repoCat.Create(&catMercado)
 	if err != nil {
 		return err
 	}
 	var catAlimentacao catEntidade.Categoria
 	catAlimentacao.Nome = "Alimentação"
-	catAlimentacao.Cor = "f56848"
+	catAlimentacao.Cor = "#f56848"
 	catAlimentacao.Valor_Esperado = 100
 	catAlimentacao.Limite = 100
 	catAlimentacao.UsuarioId = userNovo.ID
@@ -74,7 +74,7 @@ func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
 	var catLazer catEntidade.Categoria
 
 	catLazer.Nome = "Lazer"
-	catLazer.Cor = "8a48f6"
+	catLazer.Cor = "#8a48f6"
 	catLazer.Valor_Esperado = 100
 	catLazer.Limite = 100
 	catLazer.UsuarioId = userNovo.ID

@@ -54,29 +54,30 @@ func (h *EntradaController) DeleteEntradaService(c *gin.Context) {
 
 func (h *EntradaController) GetEntrada(c *gin.Context) {
 	uuid := c.Param("ID")
-	user, err := h.entradaService.GetByID(uuid)
+	antigaEntrada, err := h.entradaService.GetByID(uuid)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Entrada não encontrada!"})
 		return
 	}
-	c.JSON(http.StatusOK, user)
+	c.JSON(http.StatusOK, antigaEntrada)
 }
 
 func (h *EntradaController) UpdateEntrada(c *gin.Context) {
 	id := c.Param("ID")
-	user, err := h.entradaService.GetByID(id)
+	antigaEntrada, err := h.entradaService.GetByID(id)
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Entrada não encontrada!"})
 		return
 	}
-	var novousuario entrada_entities.Entrada = *user
-	if err := c.ShouldBindJSON(&novousuario); err != nil {
+	var novaEntrada entrada_entities.Entrada = *antigaEntrada
+	if err := c.ShouldBindJSON(&novaEntrada); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := h.entradaService.UpdateEntrada(&novousuario, user); err != nil {
+	novaEntrada.ID = id
+	if err := h.entradaService.UpdateEntrada(&novaEntrada); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, novousuario)
+	c.JSON(http.StatusOK, novaEntrada)
 }
