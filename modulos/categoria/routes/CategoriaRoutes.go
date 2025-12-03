@@ -15,7 +15,7 @@ func CategoriaRouter(group *gin.RouterGroup, db *gorm.DB) {
 	categoriaController := controllers.NewCategoriaController(categoriaService)
 
 	group.GET("/categoria/user/:ID", categoriaController.ListUserCategorias)
-	group.GET("/categoria/", categoriaController.ListUserCategorias)
+	group.GET("/categoria", categoriaController.ListUserCategorias)
 	group.GET("/categoria/get/:ID", categoriaController.GetCategoria)
 	group.POST("/categoria", categoriaController.CreateCategoria)
 	group.PUT("/categoria/:ID", categoriaController.UpdateCategoria)

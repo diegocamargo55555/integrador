@@ -7,16 +7,59 @@ document.addEventListener("DOMContentLoaded", function () {
     const tabelaBody = document.querySelector('.tabela-categorias tbody');
     const tabelaResumoBody = document.querySelector('.tabela-resumo tbody');
     const formCat = document.getElementById('form-nova-categoria');
+
+    const elMesAtual = document.querySelector('.mes-atual');
+    const btnAnt = document.querySelector('.seta-nav:first-child');
+    const btnProx = document.querySelector('.seta-nav:last-child');
     
     let chartInstance = null;
     let listaCategorias = [];
+    let gastosGlobais = [];
     let categoriaEditandoID = null;
 
+    let dataReferencia = new Date();
+
+    function iniciar() {
+        configurarNavegacaoData();
+        atualizarDisplayData();
+        carregarDados();
+    }
+
+    function configurarNavegacaoData() {
+        if(btnAnt) {
+            btnAnt.addEventListener('click', () => {
+                dataReferencia.setMonth(dataReferencia.getMonth() - 1);
+                atualizarDisplayData();
+                recalcularPorMes();
+            });
+        }
+
+        if(btnProx) {
+            btnProx.addEventListener('click', () => {
+                dataReferencia.setMonth(dataReferencia.getMonth() + 1);
+                atualizarDisplayData();
+                recalcularPorMes();
+            });
+        }
+    }
+
+    function atualizarDisplayData() {
+        if(elMesAtual) {
+            const nomeMes = dataReferencia.toLocaleDateString('pt-BR', { month: 'long', year: 'numeric' });
+            elMesAtual.textContent = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1);
+        }
+    }
+
     async function carregarDados() {
+        const usuarioId = localStorage.getItem('usuario_id');
+        if (!usuarioId) {
+            return;
+        }
+
         try {
             const [resCat, resGastos] = await Promise.all([
-                fetch(API_URL_CATEGORIAS),
-                fetch(API_URL_GASTOS)
+                fetch(`${API_URL_CATEGORIAS}/user/${usuarioId}`),
+                fetch(`${API_URL_GASTOS}/user/${usuarioId}`)
             ]);
 
             if (!resCat.ok) throw new Error('Erro ao buscar categorias');
@@ -24,37 +67,51 @@ document.addEventListener("DOMContentLoaded", function () {
             const categoriasRaw = await resCat.json();
             const gastosRaw = resGastos.ok ? await resGastos.json() : [];
 
-            const somaPorCategoria = {};
+            listaCategorias = categoriasRaw.map(c => ({...c, total_gasto: 0}));
+            gastosGlobais = gastosRaw;
 
-            gastosRaw.forEach(gasto => {
-                const catId = gasto.categoria_id || gasto.CategoriaId;
-                const valor = parseFloat(gasto.valor || gasto.Valor || 0);
-
-                if (catId) {
-                    if (!somaPorCategoria[catId]) {
-                        somaPorCategoria[catId] = 0;
-                    }
-                    somaPorCategoria[catId] += valor;
-                }
-            });
-
-            listaCategorias = categoriasRaw.map(cat => {
-                const idReal = cat.id || cat.ID;
-                return {
-                    ...cat, 
-                    total_gasto: somaPorCategoria[idReal] || 0 
-                };
-            });
-            
-            renderizarTabela();
-            renderizarResumoEGrafico();
+            recalcularPorMes();
 
         } catch (error) {
             console.error(error);
             if(tabelaBody) {
-                tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Erro de conexão.</td></tr>';
+                tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Erro de conexão ou nenhum dado.</td></tr>';
             }
         }
+    }
+
+    function recalcularPorMes() {
+        const mesRef = dataReferencia.getMonth();
+        const anoRef = dataReferencia.getFullYear();
+
+        const somaPorCategoria = {};
+
+        gastosGlobais.forEach(gasto => {
+            if(!gasto.data) return;
+
+            const dataGasto = new Date(gasto.data); 
+            
+            if (dataGasto.getMonth() === mesRef && dataGasto.getFullYear() === anoRef) {
+                const catId = gasto.categoria_id || gasto.CategoriaId;
+                const valor = parseFloat(gasto.valor || gasto.Valor || 0);
+
+                if (catId) {
+                    if (!somaPorCategoria[catId]) somaPorCategoria[catId] = 0;
+                    somaPorCategoria[catId] += valor;
+                }
+            }
+        });
+
+        listaCategorias = listaCategorias.map(cat => {
+            const idReal = cat.id || cat.ID;
+            return {
+                ...cat, 
+                total_gasto: somaPorCategoria[idReal] || 0 
+            };
+        });
+        
+        renderizarTabela();
+        renderizarResumoEGrafico();
     }
 
     async function salvarCategoria(evento) {
@@ -63,7 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
         const usuarioId = localStorage.getItem('usuario_id');
         if (!usuarioId) {
             alert("Sessão expirada. Faça login novamente.");
-            window.location.href = '../login/login.html';
             return;
         }
 
@@ -277,5 +333,5 @@ document.addEventListener("DOMContentLoaded", function () {
         btnFecharX.addEventListener('click', () => fecharModal(modalCat));
     }
 
-    carregarDados();
+    iniciar();
 });

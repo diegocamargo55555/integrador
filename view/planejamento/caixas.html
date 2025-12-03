@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Caixas</title>
     <link rel="stylesheet" href="../gastos/style.css"> 
-    <link rel="stylesheet" href="../planejamento/caixa.css">
+    <link rel="stylesheet" href="caixa.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
@@ -22,13 +22,6 @@
         </nav>
 
         <div class="wrapper-principal">
-            <header class="cabecalho-pagina">
-                <div class="navegador-mes">
-                    <button class="seta-nav">&lt;</button>
-                    <span class="mes-atual">Janeiro 2025</span>
-                    <button class="seta-nav">&gt;</button>
-                </div>
-            </header>
 
             <main class="area-conteudo-dividida">
                 
@@ -63,7 +56,7 @@
                                 <span class="valor-info destaque" id="detalhe-falta">---</span>
                             </div>
                              <div class="item-info">
-                                <span class="rotulo-info">Mensal</span>
+                                <span class="rotulo-info">Mensal Sugerido</span>
                                 <span class="valor-info" id="detalhe-valor-mensal">---</span>
                             </div>
                         </div>
@@ -74,11 +67,11 @@
 
                     <div class="area-graficos">
                         <div class="container-grafico-card">
-                            <h4 class="titulo-grafico">Projeção</h4>
+                            <h4 class="titulo-grafico">Projeção Futura</h4>
                             <div class="canvas-wrapper"><canvas id="graficoCrescimento"></canvas></div>
                         </div>
                         <div class="container-grafico-card">
-                            <h4 class="titulo-grafico">Progresso</h4>
+                            <h4 class="titulo-grafico">Progresso Atual</h4>
                              <div class="canvas-wrapper"><canvas id="graficoDepositos"></canvas></div>
                         </div>
                     </div>
@@ -94,10 +87,19 @@
                 <button class="fechar-modal" onclick="fecharModalConfig()">×</button>
             </div>
             <form class="formulario-transacao" id="config-caixa-form">
+                
                 <div class="grupo-form">
-                    <label class="rotulo-form">Nome</label>
-                    <input type="text" id="config-nome" class="input-form" required>
+                    <label class="rotulo-form">Nome da Meta</label>
+                    <input type="text" id="config-nome" class="input-form" required placeholder="Ex: Viagem, Carro Novo...">
                 </div>
+
+                <div class="grupo-form">
+                    <label class="rotulo-form">Categoria</label>
+                    <select id="config-categoria" class="input-form" required>
+                        <option value="">Carregando categorias...</option>
+                    </select>
+                </div>
+
                 <div class="grupo-form-linha">
                     <div class="grupo-form">
                         <label class="rotulo-form">Meta Final (R$)</label>
@@ -110,12 +112,12 @@
                 </div>
                 <div class="grupo-form-linha">
                     <div class="grupo-form">
-                        <label class="rotulo-form">Mensal (R$)</label>
-                        <input type="number" id="config-mensal" class="input-form" step="0.01">
+                        <label class="rotulo-form">Depósito Mensal (R$)</label>
+                        <input type="number" id="config-mensal" class="input-form" step="0.01" placeholder="Estimativa">
                     </div>
                     <div class="grupo-form">
                         <label class="rotulo-form">Cor</label>
-                        <input type="color" id="config-cor" class="input-form" style="height:48px" value="#f39c12">
+                        <input type="color" id="config-cor" class="input-form" style="height:48px; cursor:pointer;" value="#f39c12">
                     </div>
                 </div>
                 <div class="acoes-form">
