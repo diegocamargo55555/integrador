@@ -2,9 +2,11 @@ package router
 
 import (
 	credito "integrador/modulos/credito/repositories"
+	gastoRepository "integrador/modulos/gasto/repositories"
 	controllers "integrador/modulos/pagamento/controllers"
 	repositories "integrador/modulos/pagamento/repositories"
-	services "integrador/modulos/pagamento/services"
+	"integrador/modulos/pagamento/services"
+	userRepository "integrador/modulos/user/repositories"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -13,7 +15,9 @@ import (
 func PagamentoRouter(group *gin.RouterGroup, db *gorm.DB) {
 	pagamentoRepository := repositories.NewPagamentoRepository(db)
 	creditoRepository := credito.NewCreditoRepository(db)
-	pagamentoService := services.NewPagamentoService(pagamentoRepository, creditoRepository)
+	userRepository := userRepository.NewUserRepository(db)
+	gastoRepository := gastoRepository.NewGastoRepository(db)
+	pagamentoService := services.NewPagamentoService(pagamentoRepository, creditoRepository, userRepository, gastoRepository)
 	pagamentoController := controllers.NewPagamentoController(pagamentoService)
 
 	group.GET("/pagamento", pagamentoController.ListPagamentos)

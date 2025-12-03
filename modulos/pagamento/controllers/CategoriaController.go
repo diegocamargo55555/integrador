@@ -5,7 +5,7 @@ import (
 	"time"
 
 	entities "integrador/modulos/pagamento/entities"
-	services "integrador/modulos/pagamento/services"
+	"integrador/modulos/pagamento/services"
 
 	"github.com/gin-gonic/gin"
 )

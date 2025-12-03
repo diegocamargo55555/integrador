@@ -42,6 +42,7 @@ type Planejamento struct {
 	Estima_Data_Termino    datatypes.Date `gorm:"not null"`
 	CategoriaId            datatypes.UUID `gorm:"not null"`
 	UsuarioId              datatypes.UUID `gorm:"not null"`
+	Gastos                 *[]Gasto       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
 }
@@ -60,18 +61,20 @@ type Categoria struct {
 }
 
 type Gasto struct {
-	ID          datatypes.UUID `gorm:"default:uuid_generate_v4()"`
-	Nome        string         `gorm:"not null"`
-	Data        datatypes.Date `gorm:"not null"`
-	Foi_Pago    bool           `gorm:"not null"`
-	Fixo        bool           `goorm:"not null"`
-	Valor       float64        `gorm:"default:0"`
-	UsuarioId   datatypes.UUID `gorm:"not null"`
-	CategoriaId datatypes.UUID `gorm:"not null"`
-	Credito     []Credito      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	Pagamento   []Pagamento    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID             datatypes.UUID  `gorm:"default:uuid_generate_v4()"`
+	Nome           string          `gorm:"not null"`
+	Data           datatypes.Date  `gorm:"not null"`
+	Foi_Pago       bool            `gorm:"not null"`
+	Fixo           bool            `goorm:"not null"`
+	Valor          float64         `gorm:"default:0"`
+	UsuarioId      datatypes.UUID  `gorm:"not null"`
+	CategoriaId    datatypes.UUID  `gorm:"not null"`
+	PlanejamentoId *datatypes.UUID `gorm:"default:null"`
+	Credito        []Credito       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Pagamento      []Pagamento     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 type Pagamento struct {
