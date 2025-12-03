@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func entradaRoute(group *gin.RouterGroup, db *gorm.DB) {
+func EntradaRouter(group *gin.RouterGroup, db *gorm.DB) {
 	entradaRepository := repositories.NewEntradaRepository(db)
 	entradaService := entrada_services.NewEntradaService(entradaRepository)
 	entradaController := entrada_controllers.NewEntradaController(entradaService)
