@@ -14,11 +14,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function carregarDados() {
         try {
+            const usuarioId = localStorage.getItem('usuario_id');
+            if (!usuarioId) {
+                alert("Sessão expirada. Faça login novamente.");
+                window.location.href = '../login/login.html';
+                return;
+            }
             const [resCat, resGastos] = await Promise.all([
-                fetch(API_URL_CATEGORIAS),
-                fetch(API_URL_GASTOS)
+                fetch(API_URL_CATEGORIAS+'/user/'+usuarioId),
+                fetch(API_URL_GASTOS+'/user/'+usuarioId)
             ]);
-
             if (!resCat.ok) throw new Error('Erro ao buscar categorias');
             
             const categoriasRaw = await resCat.json();

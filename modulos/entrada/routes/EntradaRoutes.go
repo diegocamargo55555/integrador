@@ -13,7 +13,7 @@ func EntradaRouter(group *gin.RouterGroup, db *gorm.DB) {
 	entradaRepository := repositories.NewEntradaRepository(db)
 	entradaService := entrada_services.NewEntradaService(entradaRepository)
 	entradaController := entrada_controllers.NewEntradaController(entradaService)
-
+	group.GET("/entrada/user/:ID", entradaController.ListUserEntradas)
 	group.GET("/entrada", entradaController.ListEntrada)
 	group.GET("/entrada/:ID", entradaController.GetEntrada)
 	group.POST("/entrada", entradaController.CreateEntrada)

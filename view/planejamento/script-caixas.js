@@ -22,7 +22,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function carregarMetas() {
         try {
-            const response = await fetch(API_URL);
+            const usuarioId = localStorage.getItem('usuario_id');
+            const response = await fetch(API_URL+"/user/"+usuarioId);
             if (!response.ok) throw new Error("Erro");
             listaMetas = await response.json();
             renderizarLista();

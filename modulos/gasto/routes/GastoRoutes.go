@@ -15,7 +15,7 @@ func GastoRouter(group *gin.RouterGroup, db *gorm.DB) {
 	planRepository := planRepo.NewPlanejamentoRepository(db)
 	gastoService := services.NewGastoService(gastoRepository, planRepository)
 	gastoController := controllers.NewGastoController(gastoService)
-
+	group.GET("/gasto/user/:ID", gastoController.ListUserGasto)
 	group.GET("/gasto", gastoController.ListGastos)
 	group.GET("/gasto/:ID", gastoController.GetGasto)
 	group.POST("/gasto", gastoController.CreateGasto)

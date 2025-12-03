@@ -19,7 +19,11 @@ func (r *EntradaRepository) GetAllEntradas() ([]Entidades.Entrada, error) {
 	resultado := r.Db.Find(&entradas)
 	return entradas, resultado.Error
 }
-
+func (r *EntradaRepository) GetByUserId(uuid string) ([]Entidades.Entrada, error) {
+	var entradas []Entidades.Entrada
+	result := r.Db.Where("usuario_id = ?", uuid).Find(&entradas)
+	return entradas, result.Error
+}
 func (r *EntradaRepository) GetByName(name string) (*Entidades.Entrada, error) {
 	var entrada Entidades.Entrada
 	result := r.Db.Where("nome = ?", name).First(&entrada)

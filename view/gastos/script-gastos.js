@@ -45,7 +45,9 @@ document.addEventListener("DOMContentLoaded", function () {
     async function carregarEntradas() {
         if (!listaEntradas) return;
         try {
-            const response = await fetch(API_URL_ENTRADAS);
+            const usuarioId = localStorage.getItem('usuario_id');
+            if (!usuarioId) return alert("Faça login novamente.");
+            const response = await fetch(API_URL_ENTRADAS+"/user/"+usuarioId);
             if (response.ok) {
                 const entradas = await response.json();
                 listaLocalEntradas = entradas; 
@@ -105,7 +107,9 @@ document.addEventListener("DOMContentLoaded", function () {
     async function carregarOpcoesCategorias() {
         if (!selectCategoria) return;
         try {
-            const response = await fetch(API_URL_CATEGORIAS);
+            const usuarioId = localStorage.getItem('usuario_id');
+            if (!usuarioId) return alert("Faça login novamente.");
+            const response = await fetch(API_URL_CATEGORIAS + "/user/"+usuarioId);
             if (response.ok) {
                 const categorias = await response.json();
                 selectCategoria.innerHTML = '<option value="">Selecione...</option>';
@@ -121,7 +125,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function carregarGastos() {
         try {
-            const response = await fetch(API_URL_GASTOS);
+            const usuarioId = localStorage.getItem('usuario_id');
+            if (!usuarioId) return alert("Faça login novamente.");
+            const response = await fetch(API_URL_GASTOS+'/user/'+usuarioId);
             if (!response.ok) return;
             const gastos = await response.json();
             listaLocalGastos = gastos; // Salva na memória

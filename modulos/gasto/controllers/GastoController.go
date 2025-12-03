@@ -32,6 +32,15 @@ func (h *GastoController) CreateGasto(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, gasto)
 }
+func (h *GastoController) ListUserGasto(c *gin.Context) {
+	uuid := c.Param("ID")
+	gastos, err := h.gastoService.GetByUserId(uuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gastos)
+}
 
 func (h *GastoController) DeleteGasto(c *gin.Context) {
 	uuid := c.Param("ID")

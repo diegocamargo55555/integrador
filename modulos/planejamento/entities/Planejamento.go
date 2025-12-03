@@ -13,6 +13,7 @@ type Planejamento struct {
 	Valor_Desejado         float64        `json:"valor_Desejado"`
 	Estima_Deposito_Mensal float32        `json:"estima_deposito_mensal"`
 	Estima_Data_Termino    datatypes.Date `json:"estima_data_termino"`
+	Cor                    string         `json:"cor"`
 	CategoriaId            string         `json:"categoria_id" binding:"uuid"`
 	UsuarioId              string         `json:"usuario_id" binding:"uuid"`
 	CreatedAt              time.Time
