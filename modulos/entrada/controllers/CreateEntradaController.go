@@ -42,7 +42,15 @@ func (h *EntradaController) ListEntrada(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, entradas)
 }
-
+func (h *EntradaController) ListUserEntradas(c *gin.Context) {
+	uuid := c.Param("ID")
+	entradas, err := h.entradaService.GetByUserId(uuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, entradas)
+}
 func (h *EntradaController) DeleteEntradaService(c *gin.Context) {
 	uuid := c.Param("ID")
 	if err := h.entradaService.DeleteEntradaService(uuid); err != nil {
