@@ -31,6 +31,12 @@ func (r *CategoriaRepository) GetByID(uuid string) (*Entidades.Categoria, error)
 	return &categoria, result.Error
 }
 
+func (r *CategoriaRepository) GetByUserId(uuid string) ([]Entidades.Categoria, error) {
+	var categorias []Entidades.Categoria
+	result := r.Db.Where("usuario_id = ?", uuid).Find(&categorias)
+	return categorias, result.Error
+}
+
 func (r *CategoriaRepository) Create(categoria *Entidades.Categoria) error {
 	result := r.Db.Create(categoria)
 	return result.Error

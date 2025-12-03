@@ -70,7 +70,6 @@ type Gasto struct {
 	UsuarioId      datatypes.UUID  `gorm:"not null"`
 	CategoriaId    datatypes.UUID  `gorm:"not null"`
 	PlanejamentoId *datatypes.UUID `gorm:"default:null"`
-	Credito        []Credito       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Pagamento      []Pagamento     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
 	CreatedAt time.Time
@@ -83,10 +82,6 @@ type Pagamento struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
-type Credito struct {
-	GastoID         datatypes.UUID `gorm:"not null"`
-	Data_Vencimento datatypes.Date `gorm:"not null"`
-}
 
 func main() {
 	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
@@ -94,5 +89,5 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	db.AutoMigrate(&Usuario{}, &Entrada{}, &Planejamento{}, &Categoria{}, &Gasto{}, &Pagamento{}, &Credito{})
+	db.AutoMigrate(&Usuario{}, &Entrada{}, &Planejamento{}, &Categoria{}, &Gasto{}, &Pagamento{})
 }

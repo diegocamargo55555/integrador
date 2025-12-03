@@ -1,7 +1,6 @@
 package services
 
 import (
-	credito "integrador/modulos/credito/repositories"
 	gast "integrador/modulos/gasto/repositories"
 	"integrador/modulos/pagamento/repositories"
 	userRep "integrador/modulos/user/repositories"
@@ -39,12 +38,11 @@ func erroGastoNaoExiste() error {
 }
 
 type PagamentoService struct {
-	repo        *repositories.PagamentoRepository
-	repoCredito *credito.CreditoRepository
-	repoUser    *userRep.UserRepository
-	repoGasto   *gast.GastoRepository
+	repo      *repositories.PagamentoRepository
+	repoUser  *userRep.UserRepository
+	repoGasto *gast.GastoRepository
 }
 
-func NewPagamentoService(repo *repositories.PagamentoRepository, repoCredito *credito.CreditoRepository, repoUser *userRep.UserRepository, repoGasto *gast.GastoRepository) *PagamentoService {
-	return &PagamentoService{repo: repo, repoCredito: repoCredito, repoUser: repoUser, repoGasto: repoGasto}
+func NewPagamentoService(repo *repositories.PagamentoRepository, repoUser *userRep.UserRepository, repoGasto *gast.GastoRepository) *PagamentoService {
+	return &PagamentoService{repo: repo, repoUser: repoUser, repoGasto: repoGasto}
 }

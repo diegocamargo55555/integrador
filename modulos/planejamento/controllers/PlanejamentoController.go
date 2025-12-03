@@ -61,7 +61,15 @@ func (h *PlanejamentoController) ListPlanejamentos(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, planejamentos)
 }
-
+func (h *PlanejamentoController) ListUserCategorias(c *gin.Context) {
+	uuid := c.Param("ID")
+	categorias, err := h.planejamentoService.GetByUserId(uuid)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, categorias)
+}
 func (h *PlanejamentoController) UpdatePlanejamento(c *gin.Context) {
 	id := c.Param("ID")
 	planejamento, err := h.planejamentoService.GetPlanejamentoById(id)

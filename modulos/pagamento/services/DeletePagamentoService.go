@@ -13,6 +13,5 @@ func (s *PagamentoService) DeletePagamento(uuid string) error {
 	}
 	user.Saldo = user.Saldo + gasto.Valor
 	s.repoUser.Update(user)
-	s.repoCredito.Delete(uuid)
 	return s.repo.Delete(uuid)
 }

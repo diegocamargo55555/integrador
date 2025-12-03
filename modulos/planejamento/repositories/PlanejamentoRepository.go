@@ -40,3 +40,9 @@ func (r *PlanejamentoRepository) Delete(uuid string) error {
 	result := r.Db.Where("ID = ?", uuid).Delete(&Entidades.Planejamento{})
 	return result.Error
 }
+
+func (r *PlanejamentoRepository) GetByUserId(uuid string) ([]Entidades.Planejamento, error) {
+	var planejamentos []Entidades.Planejamento
+	result := r.Db.Where("usuario_id = ?", uuid).Find(&planejamentos)
+	return planejamentos, result.Error
+}

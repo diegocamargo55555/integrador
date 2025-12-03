@@ -13,6 +13,7 @@ func PlanejamentoRouter(group *gin.RouterGroup, db *gorm.DB) {
 	planejamentoRepository := repositories.NewPlanejamentoRepository(db)
 	planejamentoService := services.NewPlanejamentoService(planejamentoRepository)
 	planejamentoController := controllers.NewPlanejamentoController(planejamentoService)
+	group.GET("/planejamento/user:ID", planejamentoController.ListUserCategorias)
 
 	group.GET("/planejamento", planejamentoController.ListPlanejamentos)
 	group.GET("/planejamento/:ID", planejamentoController.GetPlanejamento)

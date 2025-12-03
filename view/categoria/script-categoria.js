@@ -1,19 +1,23 @@
 document.addEventListener("DOMContentLoaded", function () {
     const API_URL = '/aginisia/categoria';
-    
     const ctxPizza = document.getElementById('categoriasPieChart');
     const modalCat = document.getElementById('modal-nova-categoria');
     const tabelaBody = document.querySelector('.tabela-categorias tbody');
     const tabelaResumoBody = document.querySelector('.tabela-resumo tbody');
     const formCat = document.getElementById('form-nova-categoria');
-    
     let chartInstance = null;
     let listaCategorias = [];
     let categoriaEditandoID = null;
 
     async function carregarCategorias() {
         try {
-            const response = await fetch(API_URL);
+            const usuarioId = localStorage.getItem('usuario_id');
+            if (!usuarioId) {
+                alert("Sessão expirada. Faça login novamente.");
+                window.location.href = '../login/login.html';
+                return;
+            }
+            const response = await fetch(API_URL+"/user/"+usuarioId);
             if (!response.ok) throw new Error('Erro ao buscar categorias');
             
             listaCategorias = await response.json();
