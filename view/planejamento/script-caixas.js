@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     
-    const API_URL = '/aginisia/planejamento';
+    const API_URL = 'http://localhost:8080/aginisia/planejamento';
     
     const containerLista = document.querySelector('.conteudo-lista');
     

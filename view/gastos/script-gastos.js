@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", function () {
     
-    const API_URL_GASTOS = '/aginisia/gasto';
-    const API_URL_CATEGORIAS = '/aginisia/categoria';
-    const API_URL_ENTRADAS = '/aginisia/entrada'; 
+    const API_URL_GASTOS = 'http://localhost:8080/aginisia/gasto';
+    const API_URL_CATEGORIAS = 'http://localhost:8080/aginisia/categoria';
+    const API_URL_ENTRADAS = 'http://localhost:8080/aginisia/entrada'; 
 
     const modalEntrada = document.getElementById('modal-nova-entrada');
     const modalSaida = document.getElementById('modal-nova-saida');
