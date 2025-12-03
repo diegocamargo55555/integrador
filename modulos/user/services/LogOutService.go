@@ -1,13 +1,5 @@
 package user_services
 
-// import (
-// 	"errors"
-// 	"integrador/shared/auth"
-// 	"time"
-
-// 	"github.com/golang-jwt/jwt/v4"
-// )
-
 import (
 	"time"
 
@@ -18,7 +10,7 @@ func Logout(c *fiber.Ctx) error {
 	cookie := fiber.Cookie{
 		Name:     "jwt",
 		Value:    "",
-		Expires:  time.Now().Add(-time.Hour), //Sets the expiry time an hour ago in the past.
+		Expires:  time.Now().Add(-time.Hour),
 		HTTPOnly: true,
 	}
 
