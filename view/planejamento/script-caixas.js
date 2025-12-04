@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
     
     const modalConfig = document.getElementById('modal-config-caixa');
     const modalDeposito = document.getElementById('modal-deposito');
+    const selectCategoria = document.getElementById('config-categoria');
     
     let chartDonut, chartLine, chartBar;
 
@@ -20,10 +21,35 @@ document.addEventListener("DOMContentLoaded", function () {
     let metaSelecionada = null;
     let metaEditandoID = null;
 
-    async function carregarMetas() {
+    function iniciar() {
+        const usuarioId = localStorage.getItem('usuario_id');
+        if (!usuarioId) {
+            return;
+        }
+        carregarCategorias(usuarioId);
+        carregarMetas(usuarioId);
+    }
+
+    async function carregarCategorias(usuarioId) {
+        if (!selectCategoria) return;
         try {
-            const usuarioId = localStorage.getItem('usuario_id');
-            const response = await fetch(API_URL+"/user/"+usuarioId);
+            const res = await fetch(`${API_URL_CATEGORIAS}/user/${usuarioId}`);
+            if (res.ok) {
+                const categorias = await res.json();
+                selectCategoria.innerHTML = '<option value="">Selecione...</option>';
+                categorias.forEach(cat => {
+                    const opt = document.createElement('option');
+                    opt.value = cat.id || cat.ID;
+                    opt.textContent = cat.name || cat.Name;
+                    selectCategoria.appendChild(opt);
+                });
+            }
+        } catch (e) { console.error(e); }
+    }
+
+    async function carregarMetas(usuarioId) {
+        try {
+            const response = await fetch(`${API_URL}/user/${usuarioId}`);
             if (!response.ok) throw new Error("Erro");
             listaMetas = await response.json();
             renderizarLista();
@@ -41,7 +67,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function renderizarLista() {
         containerLista.innerHTML = '';
-        if (listaMetas.length === 0) {
+        if (!listaMetas || listaMetas.length === 0) {
             containerLista.innerHTML = '<div style="text-align:center; padding:20px; color:#888">Nenhuma meta.</div>';
             return;
         }
@@ -124,6 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const id = metaSelecionada.id || metaSelecionada.ID;
         const valor = parseFloat(document.getElementById('deposito-valor').value);
         const data = document.getElementById('deposito-data').value;
+        const usuarioId = localStorage.getItem('usuario_id');
 
         try {
             const response = await fetch(`${API_URL}/${id}/depositar`, {
@@ -136,7 +163,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alert("Depósito realizado!");
             modalDeposito.style.display = 'none';
-            carregarMetas();
+            carregarMetas(usuarioId);
         } catch (error) {
             alert("Erro: " + error.message);
         }
@@ -158,6 +185,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('config-valor-atual').value = meta.valor_atual;
         document.getElementById('config-mensal').value = meta.estima_deposito_mensal;
         document.getElementById('config-cor').value = meta.cor;
+
+        if(selectCategoria) {
+            selectCategoria.value = meta.categoria_id || meta.CategoriaId;
+        }
         
         modalConfig.style.display = 'flex';
     };
@@ -166,12 +197,19 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         const usuarioId = localStorage.getItem('usuario_id');
         
+        const catId = selectCategoria ? selectCategoria.value : null;
+        if (!catId) {
+            alert("Selecione uma categoria!");
+            return;
+        }
+
         const payload = {
             name: document.getElementById('config-nome').value,
             valor_Desejado: parseFloat(document.getElementById('config-valor-total').value),
             valor_atual: parseFloat(document.getElementById('config-valor-atual').value),
             estima_deposito_mensal: parseFloat(document.getElementById('config-mensal').value),
             cor: document.getElementById('config-cor').value,
+            categoria_id: catId,
             usuario_id: usuarioId
         };
 
@@ -183,15 +221,16 @@ document.addEventListener("DOMContentLoaded", function () {
             if(!res.ok) throw new Error("Erro");
             alert("Salvo!");
             modalConfig.style.display = 'none';
-            carregarMetas();
+            carregarMetas(usuarioId);
         } catch (e) { alert("Erro ao salvar"); }
     });
 
     document.getElementById('btn-excluir-meta').addEventListener('click', async () => {
         if(!confirm("Excluir meta?")) return;
         const id = metaSelecionada.id || metaSelecionada.ID;
+        const usuarioId = localStorage.getItem('usuario_id');
         await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-        carregarMetas();
+        carregarMetas(usuarioId);
     });
 
     function atualizarGraficos(total, atual, mensal, cor) {
@@ -242,5 +281,5 @@ document.addEventListener("DOMContentLoaded", function () {
     window.fecharModalConfig = () => modalConfig.style.display = 'none';
     window.fecharModalDeposito = () => modalDeposito.style.display = 'none';
 
-    carregarMetas();
+    iniciar();
 });

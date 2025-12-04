@@ -23,15 +23,21 @@ document.addEventListener("DOMContentLoaded", function () {
     let entradaEditandoID = null;
 
     function iniciar() {
-        carregarOpcoesCategorias();
-        carregarDadosCompletos();
+        const usuarioId = localStorage.getItem('usuario_id');
+        if (!usuarioId) {
+            console.error("Usuário não logado.");
+            return;
+        }
+
+        carregarOpcoesCategorias(usuarioId);
+        carregarDadosCompletos(usuarioId);
         configurarDatasPadrao();
     }
 
-    async function carregarDadosCompletos() {
+    async function carregarDadosCompletos(usuarioId) {
         totalEntradas = 0;
         totalSaidas = 0;
-        await Promise.all([carregarEntradas(), carregarGastos()]);
+        await Promise.all([carregarEntradas(usuarioId), carregarGastos(usuarioId)]);
         atualizarDisplaySaldo();
     }
 
@@ -42,12 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
         elementoSaldo.style.color = saldoFinal >= 0 ? '#141E46' : '#e74c3c';
     }
 
-    async function carregarEntradas() {
+    async function carregarEntradas(usuarioId) {
         if (!listaEntradas) return;
         try {
-            const usuarioId = localStorage.getItem('usuario_id');
-            if (!usuarioId) return alert("Faça login novamente.");
-            const response = await fetch(API_URL_ENTRADAS+"/user/"+usuarioId);
+            const response = await fetch(`${API_URL_ENTRADAS}/user/${usuarioId}`);
+            
             if (response.ok) {
                 const entradas = await response.json();
                 listaLocalEntradas = entradas; 
@@ -83,7 +88,6 @@ document.addEventListener("DOMContentLoaded", function () {
             usuario_id: usuarioId
         };
 
-        // Decide se é POST ou PUT
         const method = entradaEditandoID ? 'PUT' : 'POST';
         const url = entradaEditandoID ? `${API_URL_ENTRADAS}/${entradaEditandoID}` : API_URL_ENTRADAS;
 
@@ -98,24 +102,24 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alert(entradaEditandoID ? "Entrada atualizada!" : "Entrada registrada!");
             fecharModal(modalEntrada);
-            carregarDadosCompletos();
+            carregarDadosCompletos(usuarioId);
         } catch (error) {
             alert("Erro: " + error.message);
         }
     }
 
-    async function carregarOpcoesCategorias() {
+    async function carregarOpcoesCategorias(usuarioId) {
         if (!selectCategoria) return;
         try {
-            const usuarioId = localStorage.getItem('usuario_id');
-            if (!usuarioId) return alert("Faça login novamente.");
-            const response = await fetch(API_URL_CATEGORIAS + "/user/"+usuarioId);
+            const response = await fetch(`${API_URL_CATEGORIAS}/user/${usuarioId}`);
+            
             if (response.ok) {
                 const categorias = await response.json();
                 selectCategoria.innerHTML = '<option value="">Selecione...</option>';
                 categorias.forEach(cat => {
                     const opt = document.createElement('option');
-                    opt.value = cat.id || cat.ID; 
+                    const idReal = cat.id || cat.ID;
+                    opt.value = idReal; 
                     opt.textContent = cat.name || cat.nome || cat.Nome; 
                     selectCategoria.appendChild(opt);
                 });
@@ -123,14 +127,13 @@ document.addEventListener("DOMContentLoaded", function () {
         } catch (e) { console.log(e); }
     }
 
-    async function carregarGastos() {
+    async function carregarGastos(usuarioId) {
         try {
-            const usuarioId = localStorage.getItem('usuario_id');
-            if (!usuarioId) return alert("Faça login novamente.");
-            const response = await fetch(API_URL_GASTOS+'/user/'+usuarioId);
+            const response = await fetch(`${API_URL_GASTOS}/user/${usuarioId}`);
+            
             if (!response.ok) return;
             const gastos = await response.json();
-            listaLocalGastos = gastos; // Salva na memória
+            listaLocalGastos = gastos; 
             
             if (listaGastos) listaGastos.innerHTML = '';
             if (listaFixos) listaFixos.innerHTML = '';
@@ -180,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             alert(gastoEditandoID ? "Gasto atualizado!" : "Gasto registrado!");
             fecharModal(modalSaida);
-            carregarDadosCompletos();
+            carregarDadosCompletos(usuarioId);
         } catch (error) {
             alert("Erro: " + error.message);
         }
@@ -217,7 +220,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return li;
     }
 
-    // --- Edição GASTO ---
     window.prepararEdicaoGasto = function(id) {
         const gasto = listaLocalGastos.find(g => (g.id || g.ID) === id);
         if(!gasto) return;
@@ -230,7 +232,6 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('saida-categoria').value = gasto.categoria_id || gasto.CategoriaId;
         document.getElementById('saida-fixo').checked = gasto.fixo;
         
-        // Data input espera YYYY-MM-DD
         if(gasto.data) {
             document.getElementById('saida-data').value = gasto.data.split('T')[0];
         }
@@ -246,7 +247,6 @@ document.addEventListener("DOMContentLoaded", function () {
         abrirModal(modalSaida);
     };
 
-    // --- Edição ENTRADA ---
     window.prepararEdicaoEntrada = function(id) {
         const ent = listaLocalEntradas.find(e => (e.id || e.ID) === id);
         if(!ent) return;
@@ -277,7 +277,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if(!confirm("Apagar?")) return;
         try {
             await fetch(`${API_URL_GASTOS}/${id}`, { method: 'DELETE' });
-            carregarDadosCompletos();
+            const usuarioId = localStorage.getItem('usuario_id');
+            carregarDadosCompletos(usuarioId);
         } catch (e) { alert("Erro ao excluir"); }
     };
 
@@ -285,7 +286,8 @@ document.addEventListener("DOMContentLoaded", function () {
         if(!confirm("Apagar?")) return;
         try {
             await fetch(`${API_URL_ENTRADAS}/${id}`, { method: 'DELETE' });
-            carregarDadosCompletos();
+            const usuarioId = localStorage.getItem('usuario_id');
+            carregarDadosCompletos(usuarioId);
         } catch (e) { alert("Erro ao excluir"); }
     };
 
