@@ -5,6 +5,9 @@ import (
 	repositories "integrador/modulos/planejamento/repositories"
 	services "integrador/modulos/planejamento/services"
 
+	gastoRepo "integrador/modulos/gasto/repositories"
+	gastoServices "integrador/modulos/gasto/services"
+
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -12,7 +15,11 @@ import (
 func PlanejamentoRouter(group *gin.RouterGroup, db *gorm.DB) {
 	planejamentoRepository := repositories.NewPlanejamentoRepository(db)
 	planejamentoService := services.NewPlanejamentoService(planejamentoRepository)
-	planejamentoController := controllers.NewPlanejamentoController(planejamentoService)
+
+	gastoRepository := gastoRepo.NewGastoRepository(db)
+	gastoService := gastoServices.NewGastoService(gastoRepository, planejamentoRepository)
+
+	planejamentoController := controllers.NewPlanejamentoController(planejamentoService, gastoService)
 	group.GET("/planejamento/user/:ID", planejamentoController.ListUserPlanejamentos)
 
 	group.GET("/planejamento", planejamentoController.ListPlanejamentos)
@@ -20,4 +27,5 @@ func PlanejamentoRouter(group *gin.RouterGroup, db *gorm.DB) {
 	group.POST("/planejamento", planejamentoController.CreatePlanejamento)
 	group.PUT("/planejamento/:ID", planejamentoController.UpdatePlanejamento)
 	group.DELETE("/planejamento/:ID", planejamentoController.DeletePlanejamento)
+	group.POST("/planejamento/:ID/depositar", planejamentoController.DepositarPlanejamento)
 }
