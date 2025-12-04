@@ -42,7 +42,7 @@ type Planejamento struct {
 	Estima_Data_Termino    datatypes.Date `gorm:"not null"`
 	CategoriaId            datatypes.UUID `gorm:"not null"`
 	UsuarioId              datatypes.UUID `gorm:"not null"`
-	Cor                    string         `gorm:"default:#ffffff"`
+	Cor                    string         `gorm:"default:#000000"`
 	Gastos                 *[]Gasto       `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
 	CreatedAt              time.Time
 	UpdatedAt              time.Time
