@@ -115,6 +115,12 @@ func (h *PlanejamentoController) DepositarPlanejamento(c *gin.Context) {
 		return
 	}
 
+	print(input.Valor)
+	if input.Valor < 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Valor do depósito não pode ser negativo"})
+		return
+	}
+
 	meta.Valor_Atual += input.Valor
 	if err := h.planejamentoService.UpdatePlanejamento(meta); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao atualizar meta: " + err.Error()})
