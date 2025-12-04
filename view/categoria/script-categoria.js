@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const API_URL_CATEGORIAS = '/aginisia/categoria';
-    const API_URL_GASTOS = '/aginisia/gasto';
+    const API_URL_CATEGORIAS = 'http://localhost:8080/aginisia/categoria';
+    const API_URL_GASTOS = 'http://localhost:8080/aginisia/gasto';
     
     const ctxPizza = document.getElementById('categoriasPieChart');
     const modalCat = document.getElementById('modal-nova-categoria');

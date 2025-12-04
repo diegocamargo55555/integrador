@@ -2,24 +2,12 @@ package main
 
 import (
 	routes "integrador/shared/http"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
-
-// func main() {
-// 	database.Init()
-// 	routes.LoadRoutes()
-
-// 	fmt.Println("Servidor rodando em http://localhost:8080")
-// 	err := http.ListenAndServe(":8080", nil)
-// 	router "integrador/modulos/categoria/routes"
-
-// 	"github.com/gin-gonic/gin"
-// 	"gorm.io/driver/postgres"
-// 	"gorm.io/gorm"
-// )
 
 func main() {
 	dsn := "user=postgres.aajsdwzfkgeveslshnms password=braspress413 host=aws-1-us-east-2.pooler.supabase.com port=5432 dbname=postgres"
@@ -30,10 +18,24 @@ func main() {
 
 	r := gin.Default()
 
-	r.Static("/view", "./view")
-
+	r.Use(CorsMiddleware())
 	caminho := r.Group("/aginisia")
 	routes.LoadRoutes(caminho, db)
-
 	r.Run(":8080")
+
+}
+func CorsMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		c.Writer.Header().Set("Access-Control-Allow-Origin", "http://127.0.0.1:5502")
+		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
+		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, Authorization")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "OPTIONS, GET, POST, PATCH, DELETE, PUT")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(http.StatusNoContent)
+			return
+		}
+
+		c.Next()
+	}
 }
