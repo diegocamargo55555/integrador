@@ -8,7 +8,7 @@ import (
 )
 
 func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
-	resultado, err := s.repo.GetByID(user.Email)
+	resultado, err := s.repo.GetByEmail(user.Email)
 	if resultado.Email == user.Email || err == nil {
 		err := erroEmail()
 		return err

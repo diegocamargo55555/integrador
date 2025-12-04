@@ -35,6 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         carregarTudo(usuarioId);
+        configurarValidacaoEmTempoReal();
     }
 
     function exibirNotificacao(mensagem, tipo = 'sucesso') {
@@ -77,7 +78,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 renderizarLista();
                 if (listaMetas.length > 0) {
                     const idParaSelecionar = metaSelecionada ? (metaSelecionada.id || metaSelecionada.ID) : (listaMetas[0].id || listaMetas[0].ID);
-                    selecionarMeta(idParaSelecionar);
+                    const metaExiste = listaMetas.find(m => (m.id || m.ID) === idParaSelecionar);
+                    selecionarMeta(metaExiste ? idParaSelecionar : (listaMetas[0].id || listaMetas[0].ID));
                 } else {
                     limparDetalhes();
                 }
@@ -184,11 +186,20 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('nome-meta-deposito').textContent = metaSelecionada.name || metaSelecionada.Nome;
         document.getElementById('form-deposito').reset();
         document.getElementById('deposito-data').value = new Date().toISOString().split('T')[0];
+        
+        document.querySelectorAll('#form-deposito .input-form').forEach(i => limparErroInput(i));
+        
         modalDeposito.style.display = 'flex';
     });
 
     document.getElementById('form-deposito').addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        if (!validarFormularioCustomizado('form-deposito')) {
+            exibirNotificacao("Preencha os campos obrigatórios!", "erro");
+            return; 
+        }
+
         const id = metaSelecionada.id || metaSelecionada.ID;
         const valor = parseFloat(document.getElementById('deposito-valor').value);
         const data = document.getElementById('deposito-data').value;
@@ -214,6 +225,7 @@ document.addEventListener("DOMContentLoaded", function () {
         metaEditandoID = null;
         document.getElementById('modal-titulo').textContent = "Nova Meta";
         document.getElementById('config-caixa-form').reset();
+        document.querySelectorAll('#config-caixa-form .input-form').forEach(i => limparErroInput(i));
         modalConfig.style.display = 'flex';
     };
 
@@ -226,20 +238,28 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('config-mensal').value = meta.estima_deposito_mensal;
         document.getElementById('config-cor').value = meta.cor;
         if(selectCategoria) selectCategoria.value = meta.categoria_id || meta.CategoriaId;
+        
+        document.querySelectorAll('#config-caixa-form .input-form').forEach(i => limparErroInput(i));
+        
         modalConfig.style.display = 'flex';
     };
 
     document.getElementById('config-caixa-form').addEventListener('submit', async (e) => {
         e.preventDefault();
+        
+        if (!validarFormularioCustomizado('config-caixa-form')) {
+            exibirNotificacao("Preencha os campos obrigatórios!", "erro");
+            return;
+        }
+        
         const usuarioId = localStorage.getItem('usuario_id');
         const catId = selectCategoria ? selectCategoria.value : null;
-        if (!catId) { exibirNotificacao("Selecione uma categoria!", "aviso"); return; }
 
         const payload = {
             name: document.getElementById('config-nome').value,
             valor_Desejado: parseFloat(document.getElementById('config-valor-total').value),
-            valor_atual: parseFloat(document.getElementById('config-valor-atual').value),
-            estima_deposito_mensal: parseFloat(document.getElementById('config-mensal').value),
+            valor_atual: parseFloat(document.getElementById('config-valor-atual').value) || 0,
+            estima_deposito_mensal: parseFloat(document.getElementById('config-mensal').value) || 0,
             cor: document.getElementById('config-cor').value,
             categoria_id: catId,
             usuario_id: usuarioId
@@ -250,11 +270,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             const res = await fetch(url, { method: method, headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-            if(!res.ok) throw new Error("Erro");
+            
+            if(!res.ok) {
+                const errData = await res.json();
+                throw new Error(errData.error || "Erro desconhecido");
+            }
+
             exibirNotificacao("Salvo com sucesso!", "sucesso");
             modalConfig.style.display = 'none';
             carregarTudo(usuarioId);
-        } catch (e) { exibirNotificacao("Erro ao salvar", "erro"); }
+        } catch (e) { 
+            exibirNotificacao("Erro ao salvar: " + e.message, "erro"); 
+        }
     });
 
     document.getElementById('btn-excluir-meta').addEventListener('click', () => {
@@ -357,7 +384,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 const valor = parseFloat(deposito.valor || deposito.Valor);
                 totalDepositado += valor;
                 
-                // Pega a data (YYYY-MM-DD) direto da string para evitar fuso horário
                 const dataRaw = deposito.data.split('T')[0]; 
                 const partes = dataRaw.split('-');
                 const chaveMes = `${partes[0]}-${partes[1]}`;
@@ -381,7 +407,6 @@ document.addEventListener("DOMContentLoaded", function () {
             let cursorData = new Date(parseInt(partesMin[0]), parseInt(partesMin[1]) - 1, 1);
             const hoje = new Date();
 
-            // Loop mês a mês até hoje
             while (cursorData <= hoje || (cursorData.getMonth() === hoje.getMonth() && cursorData.getFullYear() === hoje.getFullYear())) {
                 const ano = cursorData.getFullYear();
                 const mes = (cursorData.getMonth() + 1).toString().padStart(2, '0');
@@ -397,7 +422,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 labels.push(labelFinal);
                 data.push(saldoAcumulado);
 
-                // Avança para o dia 1 do próximo mês para evitar bugs de dia 31
                 cursorData.setMonth(cursorData.getMonth() + 1);
                 cursorData.setDate(1); 
             }
@@ -412,6 +436,53 @@ document.addEventListener("DOMContentLoaded", function () {
     window.fecharModalConfig = () => modalConfig.style.display = 'none';
     window.fecharModalDeposito = () => modalDeposito.style.display = 'none';
     window.fecharModalAviso = () => { if(modalAviso) modalAviso.style.display = 'none'; idParaExcluir = null; };
+
+
+    function validarFormularioCustomizado(formId) {
+        const form = document.getElementById(formId);
+        const inputs = form.querySelectorAll('input:required, select:required');
+        let temErro = false;
+    
+        inputs.forEach(input => {
+            limparErroInput(input);
+            if (!input.checkValidity()) {
+                temErro = true;
+                let mensagem = input.validationMessage;
+                if(input.validity.valueMissing) mensagem = "Campo obrigatório!";
+                mostrarErroInput(input, mensagem);
+            }
+        });
+    
+        return !temErro;
+    }
+    
+    function mostrarErroInput(input, mensagem) {
+        input.classList.add('erro'); 
+        const divPai = input.parentElement;
+        if (!divPai.querySelector('.msg-erro-campo')) {
+            const span = document.createElement('span');
+            span.className = 'msg-erro-campo';
+            span.style.color = 'red';
+            span.style.fontSize = '0.8em';
+            span.innerText = mensagem;
+            divPai.appendChild(span);
+        }
+    }
+    
+    function limparErroInput(input) {
+        input.classList.remove('erro');
+        const divPai = input.parentElement;
+        const span = divPai.querySelector('.msg-erro-campo');
+        if (span) span.remove();
+    }
+
+    function configurarValidacaoEmTempoReal() {
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => limparErroInput(input));
+            input.addEventListener('change', () => limparErroInput(input));
+        });
+    }
 
     iniciar();
 });
