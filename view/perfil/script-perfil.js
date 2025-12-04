@@ -6,9 +6,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputEmail = document.getElementById('perfil-email');
     const inputSenha = document.getElementById('perfil-senha');
     const inputConfirma = document.getElementById('perfil-confirma-senha');
+    const inputSenhaAtual = document.getElementById('perfil-senha-atual');
+
     const btnLogout = document.getElementById('btn-logout-pagina');
 
-    // Elementos do Modal de Logout
     const modalLogout = document.getElementById('modal-logout');
     const btnConfirmarLogout = document.getElementById('btn-confirmar-logout');
     const btnCancelarLogout = document.getElementById('btn-cancelar-logout');
@@ -64,10 +65,21 @@ document.addEventListener("DOMContentLoaded", function () {
         const usuarioId = localStorage.getItem('usuario_id');
         
         const senha = inputSenha.value;
+        const senhaAtual = inputSenhaAtual.value;
         const confirma = inputConfirma.value;
 
         if (senha && senha !== confirma) {
             exibirNotificacao("As senhas não coincidem!", "erro");
+            return;
+        }
+
+        if (senhaAtual && senhaAtual !== localStorage.getItem('usuario_senha')) {
+            exibirNotificacao("Senha atual não confere.", "erro");
+            return;
+        }
+
+        if (senha && !senhaAtual) {
+            exibirNotificacao("Informe a senha atual para alterar a senha.", "erro");
             return;
         }
 

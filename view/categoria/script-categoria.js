@@ -29,6 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
         configurarNavegacaoData();
         atualizarDisplayData();
         carregarDados();
+        configurarValidacaoEmTempoReal(); // NOVA FUNCIONALIDADE: Ativa limpeza de erro ao digitar
     }
 
     function exibirNotificacao(mensagem, tipo = 'sucesso') {
@@ -136,8 +137,15 @@ document.addEventListener("DOMContentLoaded", function () {
         renderizarResumoEGrafico();
     }
 
+    // --- SALVAR COM VALIDAÇÃO ---
     async function salvarCategoria(evento) {
         evento.preventDefault();
+
+        // 1. VALIDAÇÃO ANTES DE ENVIAR
+        if (!validarFormularioCustomizado('form-nova-categoria')) {
+            exibirNotificacao("Preencha os campos obrigatórios!", "erro");
+            return;
+        }
         
         const usuarioId = localStorage.getItem('usuario_id');
         if (!usuarioId) {
@@ -325,6 +333,10 @@ document.addEventListener("DOMContentLoaded", function () {
         
         if(titulo) titulo.textContent = 'Nova Categoria';
         if(form) form.reset();
+        
+        // Limpa erros visuais ao abrir
+        document.querySelectorAll('#form-nova-categoria .input-form').forEach(i => limparErroInput(i));
+        
         document.getElementById('categoria-cor').value = '#41B06E';
         abrirModal(modalCat);
     };
@@ -338,6 +350,10 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('categoria-nome').value = cat.name;
         document.getElementById('categoria-limite').value = cat.limite;
         document.getElementById('categoria-cor').value = cat.cor;
+        
+        // Limpa erros visuais ao abrir
+        document.querySelectorAll('#form-nova-categoria .input-form').forEach(i => limparErroInput(i));
+        
         abrirModal(modalCat);
     };
 
@@ -350,6 +366,57 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const btnFecharX = document.querySelector('.fechar-modal');
     if(btnFecharX) btnFecharX.addEventListener('click', () => fecharModal(modalCat));
+
+    // --- FUNÇÕES DE VALIDAÇÃO VISUAL (Igual ao módulo de Caixas) ---
+
+    function validarFormularioCustomizado(formId) {
+        const form = document.getElementById(formId);
+        // Busca inputs que tem o atributo 'required' no HTML
+        const inputs = form.querySelectorAll('input:required, select:required');
+        let temErro = false;
+    
+        inputs.forEach(input => {
+            limparErroInput(input);
+            if (!input.checkValidity()) {
+                temErro = true;
+                let mensagem = input.validationMessage;
+                if(input.validity.valueMissing) mensagem = "Campo obrigatório!";
+                mostrarErroInput(input, mensagem);
+            }
+        });
+    
+        return !temErro;
+    }
+    
+    function mostrarErroInput(input, mensagem) {
+        input.classList.add('erro'); // Classe que deixa a borda vermelha
+        const divPai = input.parentElement;
+        if (!divPai.querySelector('.msg-erro-campo')) {
+            const span = document.createElement('span');
+            span.className = 'msg-erro-campo';
+            span.style.color = '#e74c3c'; // Cor vermelha explícita
+            span.style.fontSize = '0.8em';
+            span.style.marginTop = '4px';
+            span.style.display = 'block';
+            span.innerText = mensagem;
+            divPai.appendChild(span);
+        }
+    }
+    
+    function limparErroInput(input) {
+        input.classList.remove('erro');
+        const divPai = input.parentElement;
+        const span = divPai.querySelector('.msg-erro-campo');
+        if (span) span.remove();
+    }
+
+    function configurarValidacaoEmTempoReal() {
+        const inputs = document.querySelectorAll('input, select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => limparErroInput(input));
+            input.addEventListener('change', () => limparErroInput(input));
+        });
+    }
 
     iniciar();
 });

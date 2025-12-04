@@ -38,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         configurarDatasPadrao();
         carregarOpcoesCategorias(usuarioId);
         carregarDadosCompletos(usuarioId);
+        configurarValidacaoEmTempoReal();
 
         inputInicio.addEventListener('change', aplicarFiltros);
         inputFim.addEventListener('change', aplicarFiltros);
@@ -183,6 +184,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function salvarEntrada(e) {
         e.preventDefault();
+
+        if (!validarFormularioCustomizado('form-entrada')) {
+            exibirNotificacao("Preencha os campos obrigatórios!", "erro");
+            return;
+        }
+
         const usuarioId = localStorage.getItem('usuario_id');
         if (!usuarioId) { exibirNotificacao("Faça login novamente.", "erro"); return; }
 
@@ -218,6 +225,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function salvarSaida(e) {
         e.preventDefault();
+
+        if (!validarFormularioCustomizado('form-saida')) {
+            exibirNotificacao("Preencha os campos obrigatórios!", "erro");
+            return;
+        }
+
         const usuarioId = localStorage.getItem('usuario_id');
         if (!usuarioId) { exibirNotificacao("Faça login novamente.", "erro"); return; }
 
@@ -283,6 +296,8 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('saida-fixo').checked = gasto.fixo;
         if (gasto.data) document.getElementById('saida-data').value = gasto.data.split('T')[0];
 
+        document.querySelectorAll('#form-saida .input-form').forEach(i => limparErroInput(i));
+
         abrirModal(modalSaida);
     };
 
@@ -297,6 +312,8 @@ document.addEventListener("DOMContentLoaded", function () {
         let dataCampo = ent.data_entrada || ent.Data_Entrada;
         if (dataCampo) document.getElementById('entrada-data').value = dataCampo.split('T')[0];
 
+        document.querySelectorAll('#form-entrada .input-form').forEach(i => limparErroInput(i));
+
         abrirModal(modalEntrada);
     };
 
@@ -305,6 +322,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('titulo-modal-saida').textContent = 'Nova Saída';
         document.getElementById('form-saida').reset();
         document.getElementById('saida-data').value = new Date().toISOString().split('T')[0];
+        
+        document.querySelectorAll('#form-saida .input-form').forEach(i => limparErroInput(i));
+        
         abrirModal(modalSaida);
     };
 
@@ -313,6 +333,9 @@ document.addEventListener("DOMContentLoaded", function () {
         document.getElementById('titulo-modal-entrada').textContent = 'Nova Entrada';
         document.getElementById('form-entrada').reset();
         document.getElementById('entrada-data').value = new Date().toISOString().split('T')[0];
+
+        document.querySelectorAll('#form-entrada .input-form').forEach(i => limparErroInput(i));
+
         abrirModal(modalEntrada);
     };
 
@@ -378,6 +401,57 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const formE = document.getElementById('form-entrada');
     if (formE) formE.addEventListener('submit', salvarEntrada);
+
+
+    function validarFormularioCustomizado(formId) {
+        const form = document.getElementById(formId);
+        const inputs = form.querySelectorAll('input:required, select:required');
+        let temErro = false;
+    
+        inputs.forEach(input => {
+            limparErroInput(input);
+            if (!input.checkValidity()) {
+                temErro = true;
+                let mensagem = input.validationMessage;
+                if(input.tagName === 'SELECT' && input.value === "") mensagem = "Selecione uma opção.";
+                if(input.validity.valueMissing) mensagem = "Campo obrigatório!";
+                
+                mostrarErroInput(input, mensagem);
+            }
+        });
+    
+        return !temErro;
+    }
+    
+    function mostrarErroInput(input, mensagem) {
+        input.classList.add('erro'); 
+        const divPai = input.parentElement;
+        if (!divPai.querySelector('.msg-erro-campo')) {
+            const span = document.createElement('span');
+            span.className = 'msg-erro-campo';
+            span.style.color = '#e74c3c';
+            span.style.fontSize = '0.8em';
+            span.style.marginTop = '4px';
+            span.style.display = 'block';
+            span.innerText = mensagem;
+            divPai.appendChild(span);
+        }
+    }
+    
+    function limparErroInput(input) {
+        input.classList.remove('erro');
+        const divPai = input.parentElement;
+        const span = divPai.querySelector('.msg-erro-campo');
+        if (span) span.remove();
+    }
+
+    function configurarValidacaoEmTempoReal() {
+        const inputs = document.querySelectorAll('form input, form select');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => limparErroInput(input));
+            input.addEventListener('change', () => limparErroInput(input));
+        });
+    }
 
     iniciar();
 });
