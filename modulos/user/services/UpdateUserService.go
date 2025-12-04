@@ -2,7 +2,6 @@ package user_services
 
 import (
 	Entidades "integrador/modulos/user/entities"
-	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -14,11 +13,6 @@ func (s *UserService) UpdateUser(novousuario *Entidades.Usuario, usuarioAntigo *
 		if err == nil {
 			return erroEmail()
 		}
-	}
-
-	dataNascimento := time.Time(novousuario.Data_Nascimento)
-	if dataNascimento.AddDate(18, 0, 0).After(time.Now()) {
-		return erroMenorDeIdade()
 	}
 
 	if novousuario.Senha != usuarioAntigo.Senha && novousuario.Senha != "" {

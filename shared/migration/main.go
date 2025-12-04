@@ -14,7 +14,6 @@ type Usuario struct {
 	Senha                string         `gorm:"not null"`
 	Max_Val_Planejamento int32          `gorm:"not null"`
 	Saldo                float64        `gorm:"default:0"`
-	Data_Nascimento      datatypes.Date `gorm:"not null"`
 	Email                string         `gorm:"uniqueIndex"`
 	Entradas             []Entrada      `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 	Planejamentos        []Planejamento `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
