@@ -127,6 +127,7 @@ func (h *PlanejamentoController) DepositarPlanejamento(c *gin.Context) {
 		Data:        input.Data, 
 		Fixo:        false,
 		Foi_Pago:    true,
+		PlanejamentoId: &meta.ID,
 		UsuarioId:   meta.UsuarioId,
 		CategoriaId: "",
 	}

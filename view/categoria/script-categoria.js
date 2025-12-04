@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
-    const API_URL_CATEGORIAS = '/aginisia/categoria';
-    const API_URL_GASTOS = '/aginisia/gasto';
+    const API_URL_CATEGORIAS = 'http://localhost:8080/aginisia/categoria';
+    const API_URL_GASTOS = 'http://localhost:8080/aginisia/gasto';
     
     const ctxPizza = document.getElementById('categoriasPieChart');
     const modalCat = document.getElementById('modal-nova-categoria');
@@ -12,10 +12,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const btnAnt = document.querySelector('.seta-nav:first-child');
     const btnProx = document.querySelector('.seta-nav:last-child');
     
+    const modalAviso = document.getElementById('modal-aviso-exclusao');
+    const spanNomeExcluir = document.getElementById('nome-categoria-excluir');
+    const btnConfirmarExclusao = document.getElementById('btn-confirmar-exclusao');
+
     let chartInstance = null;
     let listaCategorias = [];
     let gastosGlobais = [];
+    
     let categoriaEditandoID = null;
+    let idParaExcluir = null;
 
     let dataReferencia = new Date();
 
@@ -23,6 +29,26 @@ document.addEventListener("DOMContentLoaded", function () {
         configurarNavegacaoData();
         atualizarDisplayData();
         carregarDados();
+    }
+
+    function exibirNotificacao(mensagem, tipo = 'sucesso') {
+        const container = document.getElementById('container-notificacoes');
+        if(!container) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${tipo}`;
+        
+        let icone = '✅';
+        if(tipo === 'erro') icone = '❌';
+        if(tipo === 'aviso') icone = '⚠️';
+
+        toast.innerHTML = `<span>${icone}</span> <span>${mensagem}</span>`;
+        container.appendChild(toast);
+
+        setTimeout(() => {
+            toast.style.animation = 'fadeOut 0.5s forwards';
+            setTimeout(() => toast.remove(), 500);
+        }, 4000);
     }
 
     function configurarNavegacaoData() {
@@ -33,7 +59,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 recalcularPorMes();
             });
         }
-
         if(btnProx) {
             btnProx.addEventListener('click', () => {
                 dataReferencia.setMonth(dataReferencia.getMonth() + 1);
@@ -52,9 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     async function carregarDados() {
         const usuarioId = localStorage.getItem('usuario_id');
-        if (!usuarioId) {
-            return;
-        }
+        if (!usuarioId) return;
 
         try {
             const [resCat, resGastos] = await Promise.all([
@@ -73,10 +96,10 @@ document.addEventListener("DOMContentLoaded", function () {
             recalcularPorMes();
 
         } catch (error) {
-            console.error(error);
             if(tabelaBody) {
                 tabelaBody.innerHTML = '<tr><td colspan="5" style="text-align:center">Erro de conexão ou nenhum dado.</td></tr>';
             }
+            exibirNotificacao("Erro ao carregar dados.", "erro");
         }
     }
 
@@ -88,8 +111,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         gastosGlobais.forEach(gasto => {
             if(!gasto.data) return;
-
-            const dataGasto = new Date(gasto.data); 
+            const dataGasto = new Date(gasto.data);
             
             if (dataGasto.getMonth() === mesRef && dataGasto.getFullYear() === anoRef) {
                 const catId = gasto.categoria_id || gasto.CategoriaId;
@@ -119,7 +141,7 @@ document.addEventListener("DOMContentLoaded", function () {
         
         const usuarioId = localStorage.getItem('usuario_id');
         if (!usuarioId) {
-            alert("Sessão expirada. Faça login novamente.");
+            exibirNotificacao("Sessão expirada. Faça login novamente.", "erro");
             return;
         }
 
@@ -149,28 +171,41 @@ document.addEventListener("DOMContentLoaded", function () {
                 throw new Error(erro.error || 'Erro ao salvar');
             }
 
-            alert(categoriaEditandoID ? 'Categoria atualizada!' : 'Categoria criada!');
+            exibirNotificacao(categoriaEditandoID ? 'Categoria atualizada!' : 'Categoria criada!', 'sucesso');
             fecharModal(modalCat);
             carregarDados(); 
         } catch (error) {
-            console.error(error);
-            alert('Erro: ' + error.message);
+            exibirNotificacao(error.message, "erro");
         }
     }
+    
+    window.solicitarExclusao = function(id, nome) {
+        idParaExcluir = id;
+        if(spanNomeExcluir) spanNomeExcluir.textContent = nome;
+        if(modalAviso) modalAviso.style.display = 'flex';
+    };
 
-    async function excluirCategoria(id, nome) {
-        if (!confirm(`Tem certeza que deseja excluir a categoria "${nome}"?`)) return;
+    window.fecharModalAviso = function() {
+        if(modalAviso) modalAviso.style.display = 'none';
+        idParaExcluir = null;
+    }
 
-        try {
-            const response = await fetch(`${API_URL_CATEGORIAS}/${id}`, { method: 'DELETE' });
-            if (!response.ok) throw new Error('Erro ao excluir');
+    if(btnConfirmarExclusao) {
+        btnConfirmarExclusao.addEventListener('click', async () => {
+            if(!idParaExcluir) return;
             
-            alert('Categoria excluída!');
-            carregarDados();
-        } catch (error) {
-            console.error(error);
-            alert('Não foi possível excluir.');
-        }
+            try {
+                const response = await fetch(`${API_URL_CATEGORIAS}/${idParaExcluir}`, { method: 'DELETE' });
+                if (!response.ok) throw new Error('Erro ao excluir');
+                
+                exibirNotificacao('Categoria e gastos excluídos!', 'sucesso');
+                fecharModalAviso();
+                carregarDados();
+            } catch (error) {
+                exibirNotificacao('Não foi possível excluir a categoria.', 'erro');
+                fecharModalAviso();
+            }
+        });
     }
 
     function renderizarTabela() {
@@ -214,8 +249,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <td>${formatarMoeda(gastoAtual)} / ${formatarMoeda(limite)}</td>
                 <td class="col-acoes">
                     <div class="grupo-botoes-acao">
-                        <button class="btn-pequeno btn-editar" onclick="window.prepararEdicao('${idReal}')">✏️</button>
-                        <button class="btn-pequeno btn-excluir" onclick="window.solicitarExclusao('${idReal}', '${nomeDisplay}')">🗑️</button>
+                        <button class="btn-pequeno btn-editar" onclick="window.prepararEdicao('${idReal}')" title="Editar">✏️</button>
+                        <button class="btn-pequeno btn-excluir" onclick="window.solicitarExclusao('${idReal}', '${nomeDisplay}')" title="Excluir">🗑️</button>
                     </div>
                 </td>
             `;
@@ -242,16 +277,13 @@ document.addEventListener("DOMContentLoaded", function () {
             const dados = listaCategorias.map(c => c.total_gasto); 
             const cores = listaCategorias.map(c => c.cor);
 
-            if (chartInstance) {
-                chartInstance.destroy();
-            }
+            if (chartInstance) chartInstance.destroy();
 
             chartInstance = new Chart(ctxPizza, {
                 type: 'doughnut',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Gasto Atual',
                         data: dados,
                         backgroundColor: cores,
                         borderWidth: 0,
@@ -294,29 +326,19 @@ document.addEventListener("DOMContentLoaded", function () {
         if(titulo) titulo.textContent = 'Nova Categoria';
         if(form) form.reset();
         document.getElementById('categoria-cor').value = '#41B06E';
-        
         abrirModal(modalCat);
     };
 
     window.prepararEdicao = function(id) {
         const cat = listaCategorias.find(c => (c.id || c.ID) === id);
-        
-        if (!cat) {
-            console.error("Categoria não encontrada:", id);
-            return;
-        }
+        if (!cat) return;
 
         categoriaEditandoID = id;
         document.getElementById('modal-categoria-titulo').textContent = 'Editar: ' + cat.name;
         document.getElementById('categoria-nome').value = cat.name;
         document.getElementById('categoria-limite').value = cat.limite;
         document.getElementById('categoria-cor').value = cat.cor;
-        
         abrirModal(modalCat);
-    };
-
-    window.solicitarExclusao = function(id, nome) {
-        excluirCategoria(id, nome);
     };
 
     if (formCat) {
@@ -324,14 +346,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     const btnCancelar = document.querySelector('.botao-form-cancelar');
-    if(btnCancelar) {
-        btnCancelar.addEventListener('click', () => fecharModal(modalCat));
-    }
+    if(btnCancelar) btnCancelar.addEventListener('click', () => fecharModal(modalCat));
 
     const btnFecharX = document.querySelector('.fechar-modal');
-    if(btnFecharX) {
-        btnFecharX.addEventListener('click', () => fecharModal(modalCat));
-    }
+    if(btnFecharX) btnFecharX.addEventListener('click', () => fecharModal(modalCat));
 
     iniciar();
 });

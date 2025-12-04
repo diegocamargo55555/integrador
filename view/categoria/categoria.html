@@ -17,20 +17,30 @@
 
     <div class="container-app">
         <nav class="barra-lateral">
-            <div class="area-logo">
-                <span class="icone-nav logo">F</span>
-            </div>
+            <div class="area-logo"><img src="../assets/image.png" alt="Logo" class="icone-nav logo-img"></div>
             <ul class="nav-lateral">
                 <li class="item-nav">
-                    <a href="../gastos/gastos.html" class="link-nav" title="Home"><span class="icone-nav">H</span></a>
+                    <a href="../gastos/gastos.html" class="link-nav" title="Home">
+                        <img src="../assets/gastos.png" class="icone-nav" alt="Home">
+                    </a>
                 </li>
+
                 <li class="item-nav">
-                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas"><span
-                            class="icone-nav">$</span></a>
+                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas">
+                        <img src="../assets/planejamento.png" class="icone-nav" alt="Caixas">
+                    </a>
                 </li>
+
                 <li class="item-nav ativo">
-                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias"><span
-                            class="icone-nav">C</span></a>
+                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias">
+                        <img src="../assets/categoria.webp" class="icone-nav" alt="Categorias">
+                    </a>
+                </li>
+
+                <li class="item-nav" style="margin-top: auto;">
+                    <a href="../perfil/perfil.html" class="link-nav" id="btn-abrir-usuario" title="Minha Conta">
+                        <img src="../assets/user.svg" class="icone-nav" alt="Perfil">
+                    </a>
                 </li>
             </ul>
         </nav>
@@ -42,10 +52,6 @@
                     <button class="seta-nav">&lt;</button>
                     <span class="mes-atual">Janeiro 2025</span>
                     <button class="seta-nav">&gt;</button>
-                </div>
-                <div class="info-usuario">
-                    <span class="dia-atual">Dia 23</span>
-                    <div class="avatar-usuario">U</div>
                 </div>
             </header>
 
@@ -70,9 +76,7 @@
                                     <th class="col-acoes">Ações</th>
                                 </tr>
                             </thead>
-                            <!-- O corpo da tabela agora está vazio esperando o JavaScript -->
                             <tbody>
-                                <!-- JS vai injetar as linhas aqui -->
                             </tbody>
                         </table>
                     </div>
@@ -81,7 +85,6 @@
                 <aside class="painel-resumo-lateral">
                     <div class="card-resumo">
                         <h3 class="titulo-resumo">Resumo Mensal</h3>
-                        <!-- Mantive estático por enquanto pois requer lógica de soma no JS -->
                         <table class="tabela-resumo">
                             <thead>
                                 <tr>
@@ -142,9 +145,25 @@
         </div>
     </div>
 
-    <script src="script-categoria.js"></script>
-    <script src="../script.js"></script>
+    <div id="container-notificacoes"></div>
 
+    <div class="modal-fundo" id="modal-aviso-exclusao" style="display: none;">
+        <div class="modal-aviso-conteudo">
+            <h3 class="titulo-aviso">Atenção!</h3>
+            <p class="texto-aviso">
+                Você está prestes a excluir a categoria <strong id="nome-categoria-excluir">...</strong>.
+                <br><br>
+                Isso criará um <span class="destaque-aviso">EFEITO CASCATA</span>:
+                Todos os gastos vinculados a esta categoria também serão apagados permanentemente!
+            </p>
+            <div class="acoes-aviso">
+                <button class="btn-cancelar-aviso" onclick="fecharModalAviso()">Cancelar</button>
+                <button class="btn-confirmar-aviso" id="btn-confirmar-exclusao">Sim, excluir tudo</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script-categoria.js"></script>
 </body>
 
 </html>

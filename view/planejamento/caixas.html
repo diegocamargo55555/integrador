@@ -1,47 +1,70 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minhas Caixas</title>
-    <link rel="stylesheet" href="../gastos/style.css"> 
+    <link rel="stylesheet" href="../gastos/style.css">
     <link rel="stylesheet" href="caixa.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
 
     <div class="container-app">
         <nav class="barra-lateral">
-            <div class="area-logo"><span class="icone-nav logo">F</span></div>
+            <div class="area-logo"><img src="../assets/image.png" alt="Logo" class="icone-nav logo-img"></div>
             <ul class="nav-lateral">
-                <li class="item-nav"><a href="../gastos/gastos.html" class="link-nav" title="Home"><span class="icone-nav">H</span></a></li>
-                <li class="item-nav ativo"><a href="#" class="link-nav" title="Caixas"><span class="icone-nav">$</span></a></li>
-                <li class="item-nav"><a href="../categoria/categoria.html" class="link-nav" title="Categorias"><span class="icone-nav">C</span></a></li>
+                <li class="item-nav">
+                    <a href="../gastos/gastos.html" class="link-nav" title="Home">
+                        <img src="../assets/gastos.png" class="icone-nav" alt="Home">
+                    </a>
+                </li>
+
+                <li class="item-nav ativo">
+                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas">
+                        <img src="../assets/planejamento.png" class="icone-nav" alt="Caixas">
+                    </a>
+                </li>
+
+                <li class="item-nav">
+                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias">
+                        <img src="../assets/categoria.webp" class="icone-nav" alt="Categorias">
+                    </a>
+                </li>
+
+                <li class="item-nav" style="margin-top: auto;">
+                    <a href="../perfil/perfil.html" class="link-nav" id="btn-abrir-usuario" title="Minha Conta">
+                        <img src="../assets/user.svg" class="icone-nav" alt="Perfil">
+                    </a>
+                </li>
             </ul>
         </nav>
 
         <div class="wrapper-principal">
 
             <main class="area-conteudo-dividida">
-                
+
                 <section class="painel-lista">
-                    <div class="cabecalho-painel-lista" style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--bg-creme);">
-                        <h2 class="titulo-painel-lista" style="margin:0; border:none; padding:0;">Suas Metas</h2>
-                        <button class="botao-acao botao-acao--receita" style="padding: 8px 15px; font-size: 0.9em;" onclick="abrirModalCriacao()">+ Nova</button>
+                    <div class="cabecalho-painel-lista">
+                        <h2 class="titulo-painel-lista">Suas Metas</h2>
+                        <button class="botao-acao botao-acao--receita" onclick="abrirModalCriacao()">+ Nova</button>
                     </div>
-                    <div class="conteudo-lista">
-                        </div>
+                    <div class="conteudo-lista"></div>
                 </section>
 
                 <section class="painel-detalhe">
                     <header class="cabecalho-detalhe">
                         <div class="icone-detalhe" style="background-color: #ccc;"></div>
                         <h2 class="titulo-detalhe">Selecione uma meta</h2>
-                        
+
                         <div class="acoes-detalhe" style="margin-left: auto; display: none; gap: 10px;">
-                            <button id="btn-depositar-meta" class="botao-acao botao-acao--receita" style="padding: 8px 15px;">Depositar</button>
-                            <button id="btn-excluir-meta" class="btn-pequeno btn-excluir" style="width: 35px; height: 35px;">🗑️</button>
+                            <button id="btn-depositar-meta" class="botao-acao botao-acao--receita"
+                                style="padding: 8px 15px;">Depositar</button>
+                            <button id="btn-excluir-meta" class="btn-pequeno btn-excluir"
+                                style="width: 35px; height: 35px;">🗑️</button>
                         </div>
                     </header>
 
@@ -55,9 +78,13 @@
                                 <span class="rotulo-info">Falta</span>
                                 <span class="valor-info destaque" id="detalhe-falta">---</span>
                             </div>
-                             <div class="item-info">
-                                <span class="rotulo-info">Mensal Sugerido</span>
+                            <div class="item-info">
+                                <span class="rotulo-info">Mensal</span>
                                 <span class="valor-info" id="detalhe-valor-mensal">---</span>
+                            </div>
+                            <div class="item-info tempo-restante">
+                                <span class="rotulo-info">Tempo Estimado</span>
+                                <span class="valor-info" id="detalhe-tempo">---</span>
                             </div>
                         </div>
                         <div class="grafico-donut-container">
@@ -72,7 +99,7 @@
                         </div>
                         <div class="container-grafico-card">
                             <h4 class="titulo-grafico">Progresso Atual</h4>
-                             <div class="canvas-wrapper"><canvas id="graficoDepositos"></canvas></div>
+                            <div class="canvas-wrapper"><canvas id="graficoDepositos"></canvas></div>
                         </div>
                     </div>
                 </section>
@@ -87,10 +114,11 @@
                 <button class="fechar-modal" onclick="fecharModalConfig()">×</button>
             </div>
             <form class="formulario-transacao" id="config-caixa-form">
-                
+
                 <div class="grupo-form">
                     <label class="rotulo-form">Nome da Meta</label>
-                    <input type="text" id="config-nome" class="input-form" required placeholder="Ex: Viagem, Carro Novo...">
+                    <input type="text" id="config-nome" class="input-form" required
+                        placeholder="Ex: Viagem, Carro Novo...">
                 </div>
 
                 <div class="grupo-form">
@@ -106,18 +134,19 @@
                         <input type="number" id="config-valor-total" class="input-form" step="0.01" required>
                     </div>
                     <div class="grupo-form">
-                        <label class="rotulo-form">Já tenho (R$)</label>
+                        <label class="rotulo-form">Já tem (R$)</label>
                         <input type="number" id="config-valor-atual" class="input-form" step="0.01" value="0">
                     </div>
                 </div>
                 <div class="grupo-form-linha">
                     <div class="grupo-form">
-                        <label class="rotulo-form">Depósito Mensal (R$)</label>
+                        <label class="rotulo-form">Depósito Mensal esperado (R$)</label>
                         <input type="number" id="config-mensal" class="input-form" step="0.01" placeholder="Estimativa">
                     </div>
                     <div class="grupo-form">
                         <label class="rotulo-form">Cor</label>
-                        <input type="color" id="config-cor" class="input-form" style="height:48px; cursor:pointer;" value="#f39c12">
+                        <input type="color" id="config-cor" class="input-form" style="height:48px; cursor:pointer;"
+                            value="#f39c12">
                     </div>
                 </div>
                 <div class="acoes-form">
@@ -135,7 +164,8 @@
                 <button class="fechar-modal" onclick="fecharModalDeposito()">×</button>
             </div>
             <form class="formulario-transacao" id="form-deposito">
-                <p style="margin-bottom: 20px; color: #666;">Quanto você quer guardar para <strong id="nome-meta-deposito"></strong>?</p>
+                <p style="margin-bottom: 20px; color: #666;">Quanto você quer guardar para <strong
+                        id="nome-meta-deposito"></strong>?</p>
                 <div class="grupo-form">
                     <label class="rotulo-form">Valor (R$)</label>
                     <input type="number" id="deposito-valor" class="input-form" step="0.01" required placeholder="0,00">
@@ -152,6 +182,23 @@
         </div>
     </div>
 
+    <div id="container-notificacoes"></div>
+
+    <div class="modal-fundo" id="modal-aviso-exclusao" style="display: none;">
+        <div class="modal-aviso-conteudo">
+            <h3 class="titulo-aviso">Excluir Meta?</h3>
+            <p class="texto-aviso">
+                Você tem certeza que deseja excluir a meta <strong id="nome-meta-excluir">...</strong>?
+                <br>O histórico de depósitos será mantido nos gastos, mas a meta sumirá.
+            </p>
+            <div class="acoes-aviso">
+                <button class="btn-cancelar-aviso" onclick="fecharModalAviso()">Cancelar</button>
+                <button class="btn-confirmar-aviso" id="btn-confirmar-exclusao">Sim, excluir</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script-caixas.js"></script>
 </body>
+
 </html>

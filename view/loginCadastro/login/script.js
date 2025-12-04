@@ -158,7 +158,6 @@ class FormularioLoginNeon {
                 throw new Error(data.error || 'Credenciais inválidas');
             }
 
-            // Salva token se existir
             if (data.token) {
                 localStorage.setItem('user_token', data.token);
                 localStorage.setItem('usuario_id', data.user.id);

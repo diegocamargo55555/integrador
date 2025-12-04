@@ -183,9 +183,7 @@ class FormularioCadastro {
                 throw new Error(resultado.error || 'Erro ao criar conta');
             }
 
-            // Sucesso Visual
             this.formulario.style.display = 'none';
-            // Verifica se esses elementos existem antes de tentar esconder
             const divisor = document.querySelector('.divisor');
             const loginSocial = document.querySelector('.login-social');
             if (divisor) divisor.style.display = 'none';

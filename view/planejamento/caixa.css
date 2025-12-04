@@ -16,12 +16,28 @@
     overflow: hidden;
 }
 
-.titulo-painel-lista {
-    font-size: 1.2em;
-    padding: 20px 25px;
+.cabecalho-painel-lista {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     border-bottom: 2px solid var(--bg-creme);
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.titulo-painel-lista {
+    margin: 0;
+    white-space: nowrap;
+    font-size: 1.2em;
     color: var(--marinho);
-    background-color: #fff;
+}
+
+.cabecalho-painel-lista .botao-acao {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 8px 15px;
+    font-size: 0.9em;
 }
 
 .conteudo-lista {
@@ -192,6 +208,10 @@
     color: var(--verde);
 }
 
+.item-info.tempo-restante .valor-info {
+    color: #e67e22;
+}
+
 .grafico-donut-container {
     width: 140px;
     height: 140px;
@@ -228,6 +248,81 @@
     position: relative;
     min-height: 200px;
 }
+
+#container-notificacoes {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.toast {
+    min-width: 250px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    color: white;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9em;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    animation: slideIn 0.3s ease forwards;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+}
+
+.toast.sucesso { background-color: #41B06E; border-left: 5px solid #2ecc71; }
+.toast.erro { background-color: #e74c3c; border-left: 5px solid #c0392b; }
+.toast.aviso { background-color: #f39c12; border-left: 5px solid #d35400; }
+
+@keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes fadeOut {
+    to { opacity: 0; transform: translateY(-10px); }
+}
+
+.modal-aviso-conteudo {
+    background: white;
+    padding: 30px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    border-top: 5px solid #e74c3c;
+}
+
+.titulo-aviso { color: #e74c3c; font-size: 1.4em; margin-bottom: 10px; }
+.texto-aviso { color: #555; margin-bottom: 25px; line-height: 1.5; }
+.acoes-aviso { display: flex; justify-content: center; gap: 15px; }
+
+.btn-cancelar-aviso {
+    padding: 10px 20px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    color: #666;
+}
+
+.btn-confirmar-aviso {
+    padding: 10px 20px;
+    border: none;
+    background: #e74c3c;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3);
+}
+.btn-confirmar-aviso:hover { background: #c0392b; }
 
 @media (max-width: 1024px) {
     .area-conteudo-dividida {
@@ -290,5 +385,15 @@
     .modal-conteudo {
         padding: 20px;
         width: 95%;
+    }
+
+    .cabecalho-painel-lista {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .cabecalho-painel-lista .botao-acao {
+        width: 100%;
+        text-align: center;
     }
 }

@@ -1,0 +1,97 @@
+.cabecalho-perfil {
+    margin-bottom: 30px;
+}
+.cabecalho-perfil h1 { color: var(--marinho); font-size: 1.8em; }
+.cabecalho-perfil p { color: #888; }
+
+.area-conteudo-perfil {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20px;
+}
+
+.card-perfil {
+    background-color: var(--branco);
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: var(--sombra);
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.avatar-grande {
+    width: 80px;
+    height: 80px;
+    background-color: var(--marinho);
+    color: var(--menta);
+    font-size: 2.5em;
+    font-weight: bold;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 20px rgba(20, 30, 70, 0.15);
+}
+
+.form-perfil-layout {
+    width: 100%;
+}
+
+.divisor {
+    height: 1px;
+    background-color: #eee;
+    margin: 20px 0;
+}
+
+.subtitulo-perfil {
+    color: var(--marinho);
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+
+.acoes-perfil {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 2px solid #f9f9f9;
+}
+
+.botao-salvar {
+    padding: 12px 30px;
+    background-color: var(--verde);
+    color: white;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 1em;
+}
+.botao-salvar:hover { background-color: #3da566; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(65, 176, 110, 0.3); }
+
+.botao-sair {
+    background: transparent;
+    border: 1px solid var(--vermelho-alerta);
+    color: var(--vermelho-alerta);
+    padding: 10px 20px;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.botao-sair:hover { background-color: var(--vermelho-alerta); color: white; }
+
+#container-notificacoes { position: fixed; top: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
+.toast { min-width: 250px; padding: 15px 20px; border-radius: 8px; color: white; font-family: 'Poppins', sans-serif; font-size: 0.9em; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease forwards; display: flex; align-items: center; gap: 10px; opacity: 0; }
+.toast.sucesso { background-color: #41B06E; border-left: 5px solid #2ecc71; }
+.toast.erro { background-color: #e74c3c; border-left: 5px solid #c0392b; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes fadeOut { to { opacity: 0; transform: translateY(-10px); } }

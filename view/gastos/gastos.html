@@ -13,20 +13,30 @@
 
     <div class="container-app">
         <nav class="barra-lateral">
-            <div class="area-logo">
-                <span class="icone-nav logo">Logo</span>
-            </div>
+            <div class="area-logo"><img src="../assets/image.png" alt="Logo" class="icone-nav logo-img"></div>
             <ul class="nav-lateral">
                 <li class="item-nav ativo">
-                    <a href="#" class="link-nav" title="Home"><span class="icone-nav">H</span></a>
+                    <a href="../gastos/gastos.html" class="link-nav" title="Home">
+                        <img src="../assets/gastos.png" class="icone-nav" alt="Home">
+                    </a>
                 </li>
+
                 <li class="item-nav">
-                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas"><span
-                            class="icone-nav">$</span></a>
+                    <a href="../planejamento/caixas.html" class="link-nav" title="Caixas">
+                        <img src="../assets/planejamento.png" class="icone-nav" alt="Caixas">
+                    </a>
                 </li>
+
                 <li class="item-nav">
-                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias"><span
-                            class="icone-nav">C</span></a>
+                    <a href="../categoria/categoria.html" class="link-nav" title="Categorias">
+                        <img src="../assets/categoria.webp" class="icone-nav" alt="Categorias">
+                    </a>
+                </li>
+
+                <li class="item-nav" style="margin-top: auto;">
+                    <a href="../perfil/perfil.html" class="link-nav" id="btn-abrir-usuario" title="Minha Conta">
+                        <img src="../assets/user.svg" class="icone-nav" alt="Perfil">
+                    </a>
                 </li>
             </ul>
         </nav>
@@ -86,7 +96,7 @@
                             <div class="emblema-coluna despesa">-</div>
                         </div>
                         <ul class="lista-dados">
-                            </ul>
+                             </ul>
                     </section>
 
                     <section class="coluna-dados">
@@ -95,7 +105,7 @@
                             <div class="emblema-coluna fixo">●</div>
                         </div>
                         <ul class="lista-dados">
-                            </ul>
+                             </ul>
                     </section>
 
                 </div>
@@ -109,7 +119,6 @@
                 <h2 class="titulo-modal" id="titulo-modal-entrada">Nova Entrada</h2>
                 <button class="fechar-modal">×</button>
             </div>
-
             <form class="formulario-transacao" id="form-entrada">
                 <div class="grupo-form">
                     <label for="entrada-nome" class="rotulo-form">Descrição</label>
@@ -139,7 +148,6 @@
                 <h2 class="titulo-modal" id="titulo-modal-saida">Nova Saída</h2>
                 <button class="fechar-modal">×</button>
             </div>
-
             <form class="formulario-transacao" id="form-saida">
                 <div class="grupo-form">
                     <label for="saida-nome" class="rotulo-form">Descrição</label>
@@ -151,7 +159,6 @@
                         <option value="">Carregando...</option>
                     </select>
                 </div>
-
                 <div class="grupo-form-linha">
                     <div class="grupo-form">
                         <label for="saida-data" class="rotulo-form">Data</label>
@@ -162,17 +169,31 @@
                         <input type="number" id="saida-valor" class="input-form" required step="0.01" placeholder="0,00">
                     </div>
                 </div>
-
                 <div class="grupo-form-checkbox">
                     <input type="checkbox" id="saida-fixo" class="checkbox-form">
                     <label for="saida-fixo">Despesa Fixa Mensal</label>
                 </div>
-
                 <div class="acoes-form">
                     <button type="button" class="botao-form-cancelar">Cancelar</button>
                     <button type="submit" class="botao-form-enviar despesa">Salvar</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <div id="container-notificacoes"></div>
+
+    <div class="modal-fundo" id="modal-aviso-exclusao" style="display: none;">
+        <div class="modal-aviso-conteudo">
+            <h3 class="titulo-aviso">Excluir Item?</h3>
+            <p class="texto-aviso">
+                Tem certeza que deseja excluir <strong id="nome-item-excluir">...</strong>?
+                <br>Essa ação não pode ser desfeita.
+            </p>
+            <div class="acoes-aviso">
+                <button class="btn-cancelar-aviso" onclick="fecharModalAviso()">Cancelar</button>
+                <button class="btn-confirmar-aviso" id="btn-confirmar-exclusao">Sim, excluir</button>
+            </div>
         </div>
     </div>
 
