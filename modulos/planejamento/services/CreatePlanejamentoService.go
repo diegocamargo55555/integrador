@@ -5,7 +5,7 @@ import (
 )
 
 func (s *PlanejamentoService) CreatePlanejamentoService(planejamento *Entidades.Planejamento) error {
-	if planejamento.Valor_Desejado < 0 || planejamento.Estima_Deposito_Mensal < 0 {
+	if planejamento.Valor_Desejado < 0 || planejamento.Estima_Deposito_Mensal < 0 || planejamento.Valor_Atual < 0 {
 		err := erroValor()
 		return err
 	}

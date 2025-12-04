@@ -3,6 +3,7 @@ package user_controllers
 import (
 	user_entities "integrador/modulos/user/entities"
 	user_services "integrador/modulos/user/services"
+	"integrador/shared/auth"
 	"net/http"
 	"time"
 
@@ -20,6 +21,13 @@ func NewUserController(userService *user_services.UserService) *UserController {
 type LoginRequest struct {
 	Email string `json:"email" binding:"required,email"`
 	Senha string `json:"senha" binding:"required"`
+}
+
+type UpdateUserRequest struct {
+	Nome       string `json:"name"`
+	Email      string `json:"email"`
+	Senha      string `json:"senha"`       
+	SenhaAtual string `json:"senha_atual"` 
 }
 
 func (h *UserController) Login(c *gin.Context) {
@@ -45,6 +53,7 @@ func GetUserProfile(c *gin.Context) {
 		"user": user,
 	})
 }
+
 func (h *UserController) CreateUser(c *gin.Context) {
 	var user user_entities.Usuario
 
@@ -52,6 +61,7 @@ func (h *UserController) CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	if err := h.userService.CreateUserService(&user); err != nil {
@@ -84,7 +94,7 @@ func (h *UserController) GetUser(c *gin.Context) {
 	uuid := c.Param("ID")
 	user, err := h.userService.GetByID(uuid)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Usuario não encontrada!"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Usuario não encontrado!"})
 		return
 	}
 	c.JSON(http.StatusOK, user)
@@ -92,19 +102,51 @@ func (h *UserController) GetUser(c *gin.Context) {
 
 func (h *UserController) UpdateUser(c *gin.Context) {
 	id := c.Param("ID")
-	user, err := h.userService.GetByID(id)
+	
+	usuarioAtual, err := h.userService.GetByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, gin.H{"error": "Usuario não encontrada!"})
+		c.JSON(http.StatusNotFound, gin.H{"error": "Usuário não encontrado!"})
 		return
 	}
-	var novousuario user_entities.Usuario = *user
-	if err := c.ShouldBindJSON(&novousuario); err != nil {
+
+	var input UpdateUserRequest
+	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	if err := h.userService.UpdateUser(&novousuario, user); err != nil {
+
+	if input.Nome != "" {
+		usuarioAtual.Nome = input.Nome
+	}
+	if input.Email != "" {
+		usuarioAtual.Email = input.Email
+	}
+
+	if input.Senha != "" {
+		if input.SenhaAtual == "" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Para alterar a senha, é necessário informar a senha atual."})
+			return
+		}
+
+		if !auth.CheckPasswordHash(input.SenhaAtual, usuarioAtual.Senha) {
+			c.JSON(http.StatusUnauthorized, gin.H{"error": "A senha atual está incorreta."})
+			return
+		}
+		novoHash, err := auth.HashPassword(input.Senha)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Erro ao processar nova senha."})
+			return
+		}
+
+		usuarioAtual.Senha = novoHash
+	}
+
+	usuarioAtual.UpdatedAt = time.Now()
+
+	if err := h.userService.UpdateUser(usuarioAtual, usuarioAtual); err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
-	c.JSON(http.StatusOK, novousuario)
+
+	c.JSON(http.StatusOK, usuarioAtual)
 }
