@@ -9,7 +9,6 @@ document.addEventListener("DOMContentLoaded", function () {
     const inputSenhaAtual = document.getElementById('perfil-senha-atual');
 
     const btnLogout = document.getElementById('btn-logout-pagina');
-
     const modalLogout = document.getElementById('modal-logout');
     const btnConfirmarLogout = document.getElementById('btn-confirmar-logout');
     const btnCancelarLogout = document.getElementById('btn-cancelar-logout');
@@ -22,22 +21,20 @@ document.addEventListener("DOMContentLoaded", function () {
             return;
         }
         carregarDadosUsuario(usuarioId);
+        configurarValidacaoEmTempoReal();
     }
 
     function exibirNotificacao(mensagem, tipo = 'sucesso') {
         const container = document.getElementById('container-notificacoes');
-        if(!container) return;
-        
+        if (!container) return;
+
         const toast = document.createElement('div');
         toast.className = `toast ${tipo}`;
-        
-        let icone = '✅';
-        if(tipo === 'erro') icone = '❌';
-        if(tipo === 'aviso') icone = '⚠️';
+        let icone = tipo === 'erro' ? '❌' : (tipo === 'aviso' ? '⚠️' : '✅');
 
         toast.innerHTML = `<span>${icone}</span> <span>${mensagem}</span>`;
         container.appendChild(toast);
-        
+
         setTimeout(() => {
             toast.style.animation = 'fadeOut 0.5s forwards';
             setTimeout(() => toast.remove(), 500);
@@ -47,14 +44,14 @@ document.addEventListener("DOMContentLoaded", function () {
     async function carregarDadosUsuario(id) {
         try {
             const response = await fetch(`${API_URL_USER}/${id}`);
-            if(response.ok) {
+            if (response.ok) {
                 const dados = await response.json();
-                inputNome.value = dados.name || "";
-                inputEmail.value = dados.email || "";
+                inputNome.value = dados.name || dados.Nome || "";
+                inputEmail.value = dados.email || dados.Email || "";
             } else {
                 throw new Error("Erro ao buscar dados");
             }
-        } catch(e) { 
+        } catch (e) {
             console.error(e);
             exibirNotificacao("Erro ao carregar seus dados.", "erro");
         }
@@ -62,33 +59,66 @@ document.addEventListener("DOMContentLoaded", function () {
 
     formPerfil.addEventListener('submit', async (e) => {
         e.preventDefault();
+
+        document.querySelectorAll('.input-form').forEach(limparErroInput);
+
         const usuarioId = localStorage.getItem('usuario_id');
-        
-        const senha = inputSenha.value;
+        const nome = inputNome.value.trim();
+        const email = inputEmail.value.trim();
+        const senhaNova = inputSenha.value;
         const senhaAtual = inputSenhaAtual.value;
         const confirma = inputConfirma.value;
 
-        if (senha && senha !== confirma) {
-            exibirNotificacao("As senhas não coincidem!", "erro");
-            return;
+        let temErro = false;
+
+        if (!nome) {
+            mostrarErroInput(inputNome, "Nome é obrigatório.");
+            temErro = true;
+        } else if (!nome.includes(' ') || nome.split(' ').pop().length < 1) {
+            mostrarErroInput(inputNome, "Por favor, digite seu nome e sobrenome.");
+            temErro = true;
         }
 
-        if (senhaAtual && senhaAtual !== localStorage.getItem('usuario_senha')) {
-            exibirNotificacao("Senha atual não confere.", "erro");
-            return;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!email) {
+            mostrarErroInput(inputEmail, "E-mail é obrigatório.");
+            temErro = true;
+        } else if (!emailRegex.test(email)) {
+            mostrarErroInput(inputEmail, "E-mail inválido.");
+            temErro = true;
         }
 
-        if (senha && !senhaAtual) {
-            exibirNotificacao("Informe a senha atual para alterar a senha.", "erro");
+        if (senhaNova) {
+            if (senhaNova.length < 8) {
+                mostrarErroInput(inputSenha, "A nova senha deve ter no mínimo 8 caracteres.");
+                temErro = true;
+            }
+
+            if (senhaNova !== confirma) {
+                mostrarErroInput(inputConfirma, "As senhas não coincidem.");
+                temErro = true;
+            }
+
+            if (!senhaAtual) {
+                mostrarErroInput(inputSenhaAtual, "Digite sua senha atual para confirmar a mudança.");
+                temErro = true;
+            }
+        }
+
+        if (temErro) {
+            exibirNotificacao("Corrija os campos em vermelho.", "erro");
             return;
         }
 
         const payload = {
-            name: inputNome.value,
-            email: inputEmail.value
+            name: nome,
+            email: email
         };
-        
-        if (senha) payload.senha = senha; 
+
+        if (senhaNova) {
+            payload.senha = senhaNova;
+            payload.senha_atual = senhaAtual;
+        }
 
         try {
             const response = await fetch(`${API_URL_USER}/${usuarioId}`, {
@@ -97,30 +127,35 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: JSON.stringify(payload)
             });
 
-            if (!response.ok) throw new Error("Erro ao atualizar");
+            if (!response.ok) {
+                const erroData = await response.json();
+                throw new Error(erroData.error || "Erro ao atualizar");
+            }
 
             localStorage.setItem('usuario_nome', payload.name);
-            localStorage.setItem('usuario_email', payload.email);
-            
+            if (payload.email) localStorage.setItem('usuario_email', payload.email);
+
             exibirNotificacao("Perfil atualizado com sucesso!", "sucesso");
-            
+
             inputSenha.value = '';
             inputConfirma.value = '';
+            inputSenhaAtual.value = '';
 
         } catch (error) {
-            exibirNotificacao("Erro ao atualizar perfil.", "erro");
+            console.error(error);
+            exibirNotificacao(error.message || "Erro ao atualizar perfil.", "erro");
         }
     });
 
     if (btnLogout) {
         btnLogout.addEventListener('click', () => {
-            if(modalLogout) modalLogout.style.display = 'flex';
+            if (modalLogout) modalLogout.style.display = 'flex';
         });
     }
 
     if (btnCancelarLogout) {
         btnCancelarLogout.addEventListener('click', () => {
-            if(modalLogout) modalLogout.style.display = 'none';
+            if (modalLogout) modalLogout.style.display = 'none';
         });
     }
 
@@ -136,6 +171,35 @@ document.addEventListener("DOMContentLoaded", function () {
             modalLogout.style.display = 'none';
         }
     });
+
+    function mostrarErroInput(input, mensagem) {
+        input.classList.add('erro');
+        const divPai = input.parentElement;
+        if (!divPai.querySelector('.msg-erro-campo')) {
+            const span = document.createElement('span');
+            span.className = 'msg-erro-campo';
+            span.style.color = '#e74c3c';
+            span.style.fontSize = '0.8em';
+            span.style.marginTop = '5px';
+            span.style.display = 'block';
+            span.innerText = mensagem;
+            divPai.appendChild(span);
+        }
+    }
+
+    function limparErroInput(input) {
+        input.classList.remove('erro');
+        const divPai = input.parentElement;
+        const span = divPai.querySelector('.msg-erro-campo');
+        if (span) span.remove();
+    }
+
+    function configurarValidacaoEmTempoReal() {
+        const inputs = document.querySelectorAll('.input-form');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => limparErroInput(input));
+        });
+    }
 
     iniciar();
 });

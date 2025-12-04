@@ -19,11 +19,6 @@ func (s *UserService) CreateUserService(user *Entidades.Usuario) error {
 		return err
 	}
 
-	dataNascimento := time.Time(user.Data_Nascimento)
-	if dataNascimento.AddDate(18, 0, 0).After(time.Now()) {
-		return erroMenorDeIdade()
-	}
-
 	hashedPassword, err := auth.HashPassword(user.Senha)
 	if err != nil {
 		return err
